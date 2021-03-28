@@ -2,6 +2,7 @@
 namespace WaterLevelSources {
     defined('BASEPATH') OR exit('No direct script access allowed');
     require_once APPPATH.'models/HttpGetter.php';
+    require_once APPPATH.'models/HttpHeaderParser.php';
     require_once APPPATH.'models/WaterLevelSource.php';
 
     class Mlitt extends \WaterLevelSource {
@@ -20,7 +21,6 @@ namespace WaterLevelSources {
             if ($download_url === null) return null;
             var_dump($download_url);
 
-            $now = date('Y-m-d H:i:s');
             $data = $this->get_level_data($getter, $download_url);
             return $data;
         }
@@ -72,27 +72,25 @@ namespace WaterLevelSources {
 
         private function get_level_data(\HttpGetter $getter, $download_url) {
             $response =  $getter->get_with_header($download_url);
-            $encoding = isset($response['header'])
-                ? $this->get_charset_from_header($response['header'])
-                : null;
+            $encoding = null;
+            $timestamp = null;
+            if (isset($response['header'])) {
+                $header_parser = new \HttpHeaderParser($response['header']);
+                $encoding = $header_parser->get_charset();
+                $timestamp = $header_parser->get_last_modified() === null
+                    ? $header_parser->get_last_modified()
+                    : $header_parser->get_date();
+            }
+            $date = date('Y-m-d H:i:s', $timestamp);
 
             $content = isset($encoding)
                 ? mb_convert_encoding($response['content'], 'UTF-8', $encoding)
                 : $response['content'];
 
-            return $this->parse_content($content);
+            return $this->parse_content($content, $date);
         }
 
-        private function get_charset_from_header($headers) {
-            foreach ($headers as $header) {
-                if (preg_match('/Content-Type:\s*[^;]+;\s*charset=([-\w]+)/i', $header, $matches)) {
-                    return $matches[1];
-                }
-            }
-            return null;
-        }
-
-        private function parse_content($content) {
+        private function parse_content($content, $acquired_date) {
             $data = array();
             foreach (explode("\r\n", $content) as $line) {
                 $columns = explode(',', $line);
@@ -105,7 +103,8 @@ namespace WaterLevelSources {
                 $level = is_numeric($columns[2]) ? $columns[2] - 0 : null;
                 $data[] = array(
                     'date' => "{$columns[0]} {$columns[1]}",
-                    'level' => $level
+                    'level' => $level,
+                    'acquired' => $acquired_date, 
                 );
             }
             return $data;
