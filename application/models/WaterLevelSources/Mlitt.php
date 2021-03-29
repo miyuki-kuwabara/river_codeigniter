@@ -3,14 +3,13 @@ namespace WaterLevelSources {
     defined('BASEPATH') OR exit('No direct script access allowed');
     require_once APPPATH.'models/HttpGetter.php';
     require_once APPPATH.'models/HttpHeaderParser.php';
-    require_once APPPATH.'models/WaterLevelSource.php';
+    require_once APPPATH.'models/WaterLevelSources/IWaterLevelSource.php';
 
-    class Mlitt extends \WaterLevelSource {
+    class Mlitt implements IWaterLevelSource {
         const DOWNLOAD_IMG_SRC = "download.gif";
         private $source_url = null;
         
         public function __construct($db, $source_url) {
-            parent::__construct($db);
 
             $this->source_url = $source_url;
         }
