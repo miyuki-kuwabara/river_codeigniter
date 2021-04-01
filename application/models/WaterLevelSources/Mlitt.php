@@ -4,13 +4,15 @@ namespace WaterLevelSources {
     require_once APPPATH.'models/HttpGetter.php';
     require_once APPPATH.'models/HttpHeaderParser.php';
     require_once APPPATH.'models/WaterLevelSources/IWaterLevelSource.php';
+    require_once APPPATH.'models/WaterLevelSources/Mlitt/IDataParser.php';
 
     class Mlitt implements IWaterLevelSource {
         const DOWNLOAD_IMG_SRC = "download.gif";
         private $source_url = null;
+        private $data_parser = null;
         
-        public function __construct($db, $source_url) {
-
+        public function __construct($db, Mlitt\IDataParser $data_parser, $source_url) {
+            $this->data_parser = $data_parser;
             $this->source_url = $source_url;
         }
 
@@ -86,28 +88,9 @@ namespace WaterLevelSources {
                 ? mb_convert_encoding($response['content'], 'UTF-8', $encoding)
                 : $response['content'];
 
-            return $this->parse_content($content, $date);
+            return $this->data_parser->parse($content, $date);
         }
 
-        private function parse_content($content, $acquired_date) {
-            $data = array();
-            foreach (explode("\r\n", $content) as $line) {
-                $columns = explode(',', $line);
-                if (!preg_match('/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/', $columns[0], $date))
-                    continue;
-                if (!checkdate($date[2] - 0, $date[3] - 0, $date[1] - 0))
-                    continue;
-                if (!preg_match('/^\d{2}:\d{2}$/', $columns[1]))
-                    continue;
-                $level = is_numeric($columns[2]) ? $columns[2] - 0 : null;
-                $data[] = array(
-                    'date' => "{$columns[0]} {$columns[1]}",
-                    'level' => $level,
-                    'acquired' => $acquired_date, 
-                );
-            }
-            return $data;
-        }
     }    
 }
 
