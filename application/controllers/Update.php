@@ -9,4 +9,9 @@ class Update extends CI_Controller {
         var_dump($water_level->get());
         echo "</pre>";
     }
+
+    public function db() {
+        $query = $this->db->get('river_measure_sources');
+        var_dump($query->result());
+    }
 }
