@@ -103,8 +103,7 @@ namespace WaterLevelSources\Mlitt {
             if (isset($extracted['measured_at_date']) && isset($extracted['measured_at_time'])) {
                 $measured_at = "{$extracted['measured_at_date']} {$extracted['measured_at_time']}";
             }
-            unset($extracted['measured_at_date']);
-            unset($extracted['measured_at_time']);
+            
             $datum = array();
             foreach ($this->measured_values as $key => $value_type) {
                 if (isset($extracted[$key])) {
