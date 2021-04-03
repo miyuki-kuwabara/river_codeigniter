@@ -1,6 +1,8 @@
 <?php
 namespace WaterLevelSources {
     defined('BASEPATH') OR exit('No direct script access allowed');
+    require_once APPPATH.'models/Entities/MeasuredValueTypes.php';
+    require_once APPPATH.'models/Entities/MeasuredValueFlags.php';
     require_once APPPATH.'models/HttpGetter.php';
     require_once APPPATH.'models/HttpHeaderParser.php';
     require_once APPPATH.'models/WaterLevelSources/IWaterLevelSource.php';
@@ -45,13 +47,22 @@ namespace WaterLevelSources {
                     if (preg_match("/現在の洗堰放流量\s*(\d+(?:\.\d+)?)m³\/s/", $text, $matches)) {
                         return array(
                             array(
-                                'date' => $date,
-                                'level' => $matches[1] - 0,
-                                'acquired' => $date, 
+                                'measured_at' => $date,
+                                'value_type' => \Entities\MeasuredValueTypes::OUTFLOW,
+                                'value' => $matches[1] - 0,
+                                'flags' => \Entities\MeasuredValueFlags::NONE,
+                                'acquired_at' => $date, 
                             )
                         );
                     }
                 }
+                return array(
+                    'measured_at' => $date,
+                    'value_type' => \Entities\MeasuredValueTypes::OUTFLOW,
+                    'value' => null,
+                    'flags' => \Entities\MeasuredValueFlags::MISSED,
+                    'acquired_at' => $date, 
+                );
             }
             return array();
         }
