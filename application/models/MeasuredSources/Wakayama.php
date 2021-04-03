@@ -1,13 +1,13 @@
 <?php
-namespace WaterLevelSources {
+namespace MeasuredSources {
     defined('BASEPATH') OR exit('No direct script access allowed');
     require_once APPPATH.'models/Entities/MeasuredValueTypes.php';
     require_once APPPATH.'models/Entities/MeasuredValueFlags.php';
     require_once APPPATH.'models/HttpGetter.php';
     require_once APPPATH.'models/HttpHeaderParser.php';
-    require_once APPPATH.'models/WaterLevelSources/IWaterLevelSource.php';
+    require_once APPPATH.'models/MeasuredSources/IMeasuredSource.php';
 
-    class Wakayama implements IWaterLevelSource {
+    class Wakayama implements IMeasuredSource {
         private $source_url = null;
         private $value_type_provider = null;
         

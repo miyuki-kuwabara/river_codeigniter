@@ -1,16 +1,16 @@
 <?php
-namespace WaterLevelSources {
+namespace MeasuredSources {
     defined('BASEPATH') OR exit('No direct script access allowed');
-    require_once APPPATH.'models/WaterLevelSources/Mlitt.php';
-    require_once APPPATH.'models/WaterLevelSources/Araizeki.php';
-    require_once APPPATH.'models/WaterLevelSources/Wakayama.php';
-    require_once APPPATH.'models/WaterLevelSources/Mlitt/LevelDataParser.php';
-    require_once APPPATH.'models/WaterLevelSources/Mlitt/DamDataParser.php';
-    require_once APPPATH.'models/WaterLevelSources/Wakayama/LevelValueTypeProvider.php';
-    require_once APPPATH.'models/WaterLevelSources/Wakayama/DamInflowValueTypeProvider.php';
-    require_once APPPATH.'models/WaterLevelSources/Wakayama/DamOutflowValueTypeProvider.php';
+    require_once APPPATH.'models/MeasuredSources/Mlitt.php';
+    require_once APPPATH.'models/MeasuredSources/Araizeki.php';
+    require_once APPPATH.'models/MeasuredSources/Wakayama.php';
+    require_once APPPATH.'models/MeasuredSources/Mlitt/LevelDataParser.php';
+    require_once APPPATH.'models/MeasuredSources/Mlitt/DamDataParser.php';
+    require_once APPPATH.'models/MeasuredSources/Wakayama/LevelValueTypeProvider.php';
+    require_once APPPATH.'models/MeasuredSources/Wakayama/DamInflowValueTypeProvider.php';
+    require_once APPPATH.'models/MeasuredSources/Wakayama/DamOutflowValueTypeProvider.php';
 
-    class WaterLevelSourceFactory {
+    class MeasuredSourceFactory {
         public static function create_mlitt($db) {
             return new Mlitt($db, new Mlitt\LevelDataParser(), "http://www1.river.go.jp/cgi-bin/DspWaterData.exe?KIND=9&ID=306021286614020");
         }

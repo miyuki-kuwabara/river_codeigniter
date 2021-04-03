@@ -1,5 +1,5 @@
 <?php
-namespace WaterLevelSources\Mlitt {
+namespace MeasuredSources\Mlitt {
     interface IDataParser {
         public function parse($content, $acquired_date);
     }    

@@ -1,12 +1,12 @@
 <?php
-namespace WaterLevelSources {
+namespace MeasuredSources {
     defined('BASEPATH') OR exit('No direct script access allowed');
     require_once APPPATH.'models/HttpGetter.php';
     require_once APPPATH.'models/HttpHeaderParser.php';
-    require_once APPPATH.'models/WaterLevelSources/IWaterLevelSource.php';
-    require_once APPPATH.'models/WaterLevelSources/Mlitt/IDataParser.php';
+    require_once APPPATH.'models/MeasuredSources/IMeasuredSource.php';
+    require_once APPPATH.'models/MeasuredSources/Mlitt/IDataParser.php';
 
-    class Mlitt implements IWaterLevelSource {
+    class Mlitt implements IMeasuredSource {
         const DOWNLOAD_IMG_SRC = "download.gif";
         private $source_url = null;
         private $data_parser = null;

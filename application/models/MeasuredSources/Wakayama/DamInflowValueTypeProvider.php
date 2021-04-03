@@ -1,6 +1,6 @@
 <?php
-namespace WaterLevelSources\Wakayama {
-    require_once APPPATH.'models/WaterLevelSources/Wakayama/IValueTypeProvider.php';
+namespace MeasuredSources\Wakayama {
+    require_once APPPATH.'models/MeasuredSources/Wakayama/IValueTypeProvider.php';
     
     class DamInflowValueTypeProvider implements IValueTypeProvider {
         public function get() {

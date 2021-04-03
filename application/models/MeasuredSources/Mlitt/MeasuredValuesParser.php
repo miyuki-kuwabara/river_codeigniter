@@ -1,5 +1,5 @@
 <?php
-namespace WaterLevelSources\Mlitt {
+namespace MeasuredSources\Mlitt {
     require_once APPPATH.'models/Entities/MeasuredValueFlags.php';
 
     class MeasuredValuesParser {

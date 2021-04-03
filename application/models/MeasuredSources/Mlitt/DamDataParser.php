@@ -1,8 +1,8 @@
 <?php
-namespace WaterLevelSources\Mlitt {
+namespace MeasuredSources\Mlitt {
     require_once APPPATH.'models/Entities/MeasuredValueTypes.php';
-    require_once APPPATH.'models/WaterLevelSources/Mlitt/IDataParser.php';
-    require_once APPPATH.'models/WaterLevelSources/Mlitt/MeasuredValuesParser.php';
+    require_once APPPATH.'models/MeasuredSources/Mlitt/IDataParser.php';
+    require_once APPPATH.'models/MeasuredSources/Mlitt/MeasuredValuesParser.php';
     
     class DamDataParser implements IDataParser {
         private $columns = array(
