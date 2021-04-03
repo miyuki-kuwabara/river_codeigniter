@@ -2,13 +2,13 @@
 namespace WaterLevelSources\Mlitt {
     require_once APPPATH.'models/Entities/MeasuredValueTypes.php';
     require_once APPPATH.'models/WaterLevelSources/Mlitt/IDataParser.php';
-    require_once APPPATH.'models/WaterLevelSources/Mlitt/MeasuredValueFlagsParser.php';
+    require_once APPPATH.'models/WaterLevelSources/Mlitt/MeasuredValuesParser.php';
     
     class DamDataParser implements IDataParser {
         private $columns = array(
             '年月日' => array(
                 'key' => 'measured_at_date',
-                'parser' => 'parse_date' ,
+                'parser' => 'parse_date',
             ),
             '時刻' => array(
                 'key' => 'measured_at_time',
@@ -93,10 +93,11 @@ namespace WaterLevelSources\Mlitt {
 
         private function extract_data($indexes, $columns, $acquired_at) {
             $extracted = array();
+            $parser = new MeasuredValuesParser();
             foreach ($indexes as $i => $index) {
                 if (isset($index) && isset($columns[$i])) {
                     $column = $columns[$i];
-                    $extracted[$index['key']] = call_user_func(array(__CLASS__, $index['parser']), $column);
+                    $extracted[$index['key']] = $parser->$index['parser']($column);
                 }
             }
             if (isset($extracted['measured_at_date']) && isset($extracted['measured_at_time'])) {
@@ -119,32 +120,6 @@ namespace WaterLevelSources\Mlitt {
                 }
             }
             return $datum;
-        }
-
-        private static function parse_date($s) {
-            if (!preg_match('/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/', $s, $matches))
-                return null;
-            if (!checkdate($matches[2] - 0, $matches[3] - 0, $matches[1] - 0))
-                return null;
-            return $s;
-        }
-
-        private static function parse_time($s) {
-            if (!preg_match('/^\d{2}:\d{2}$/', $s))
-                return null;
-            return $s;
-        }
-
-        private static function parse_numeric($s) {
-            return is_numeric($s) ? $s - 0 : null;
-        }
-
-        private static function parse_flags($s) {
-            return MeasuredValueFlagsParser::parse($s);
-        }
-
-        private static function parse_empty($s) {
-            return $s;
         }
     }    
 }
