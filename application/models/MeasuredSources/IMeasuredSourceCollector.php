@@ -1,6 +1,6 @@
 <?php
 namespace MeasuredSources {
-    interface IMeasuredSource {
+    interface IMeasuredSourceCollector {
         public function get();
     }
 }

@@ -1,17 +1,17 @@
 <?php
-namespace MeasuredSources {
+namespace MeasuredSources\Mlitt {
     defined('BASEPATH') OR exit('No direct script access allowed');
     require_once APPPATH.'models/HttpGetter.php';
     require_once APPPATH.'models/HttpHeaderParser.php';
-    require_once APPPATH.'models/MeasuredSources/IMeasuredSource.php';
+    require_once APPPATH.'models/MeasuredSources/IMeasuredSourceCollector.php';
     require_once APPPATH.'models/MeasuredSources/Mlitt/IDataParser.php';
 
-    class Mlitt implements IMeasuredSource {
+    class MlittCollector implements \MeasuredSources\IMeasuredSourceCollector {
         const DOWNLOAD_IMG_SRC = "download.gif";
         private $source_url = null;
         private $data_parser = null;
         
-        public function __construct($db, Mlitt\IDataParser $data_parser, $source_url) {
+        public function __construct($db, IDataParser $data_parser, $source_url) {
             $this->data_parser = $data_parser;
             $this->source_url = $source_url;
         }

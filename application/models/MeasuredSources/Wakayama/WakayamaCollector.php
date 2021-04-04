@@ -1,17 +1,17 @@
 <?php
-namespace MeasuredSources {
+namespace MeasuredSources\Wakayama {
     defined('BASEPATH') OR exit('No direct script access allowed');
     require_once APPPATH.'models/Entities/MeasuredValueTypes.php';
     require_once APPPATH.'models/Entities/MeasuredValueFlags.php';
     require_once APPPATH.'models/HttpGetter.php';
     require_once APPPATH.'models/HttpHeaderParser.php';
-    require_once APPPATH.'models/MeasuredSources/IMeasuredSource.php';
+    require_once APPPATH.'models/MeasuredSources/IMeasuredSourceCollector.php';
 
-    class Wakayama implements IMeasuredSource {
+    class WakayamaCollector implements \MeasuredSources\IMeasuredSourceCollector {
         private $source_url = null;
         private $value_type_provider = null;
         
-        public function __construct($db, Wakayama\IValueTypeProvider $value_type_provider, $source_url) {
+        public function __construct($db, IValueTypeProvider $value_type_provider, $source_url) {
             $this->value_type_provider = $value_type_provider;
             $this->source_url = $source_url;
         }

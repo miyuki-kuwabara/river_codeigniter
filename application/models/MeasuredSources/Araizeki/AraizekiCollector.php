@@ -1,13 +1,13 @@
 <?php
-namespace MeasuredSources {
+namespace MeasuredSources\Araizeki {
     defined('BASEPATH') OR exit('No direct script access allowed');
     require_once APPPATH.'models/Entities/MeasuredValueTypes.php';
     require_once APPPATH.'models/Entities/MeasuredValueFlags.php';
     require_once APPPATH.'models/HttpGetter.php';
     require_once APPPATH.'models/HttpHeaderParser.php';
-    require_once APPPATH.'models/MeasuredSources/IMeasuredSource.php';
+    require_once APPPATH.'models/MeasuredSources/IMeasuredSourceCollector.php';
 
-    class Araizeki implements IMeasuredSource {
+    class AraizekiCollector implements \MeasuredSources\IMeasuredSourceCollector {
         const ANCESTOR_DIV_ID = "idx-saigai";
         private $source_url = null;
         
