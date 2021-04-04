@@ -4,6 +4,7 @@ namespace MeasuredSources\Wakayama {
     require_once APPPATH.'models/Entities/MeasuredValueFlags.php';
     require_once APPPATH.'models/HttpGetter.php';
     require_once APPPATH.'models/HttpHeaderParser.php';
+    require_once APPPATH.'models/MeasuredSources/MeasuredDateNormalizer.php';
     require_once APPPATH.'models/MeasuredSources/Wakayama/LevelValueTypeProvider.php';
     require_once APPPATH.'models/MeasuredSources/Wakayama/DamInflowValueTypeProvider.php';
     require_once APPPATH.'models/MeasuredSources/Wakayama/DamOutflowValueTypeProvider.php';
@@ -56,21 +57,16 @@ namespace MeasuredSources\Wakayama {
         }
 
         private function extract($content, $acquired_at) {
-            $now = localtime(time(), true);
+            $normalizer = new \MeasuredSources\MeasuredDateNormalizer();
             $datum = array();
             $value_type = $this->value_type_provider->get();
             foreach (explode("\n", $content) as $line) {
-                if (preg_match('/(\d{1,2}):(\d{2})\s+(\S+)/', $content, $matches)) {
-                    $hour = intval($matches[1]);
-                    $minute = intval($matches[2]);
-                    $value = is_numeric($matches[3] ? $matches[3] - 0 : null);
-                    if ($now['tm_hour'] < $hour || ($now['tm_hour'] === $hour && $now['tm_min'] < $minute)) {
-                        $timestamp = mktime($hour, $minute, 0, $now['tm_mon'] + 1, $now['tm_mday'] - 1, $now['tm_year'] + 1900);
-                    } else {
-                        $timestamp = mktime($hour, $minute, 0, $now['tm_mon'] + 1, $now['tm_mday'], $now['tm_year'] + 1900);
-                    }
+                if (preg_match('/(\d{1,2}:\d{2})\s+(\S+)/', $content, $matches)) {
+                    $measured_at = $normalizer->normalize_time($matches[1]);
+                    if ($measured_at === null) continue;
+                    $value = is_numeric($matches[2] ? $matches[2] - 0 : null);
                     $datum[] = array(
-                        'measured_at' => date('Y-m-d H:i', $timestamp),
+                        'measured_at' => $measured_at,
                         'value_type' => $value_type,
                         'value' => $value,
                         'flags' => isset($value) ? \Entities\MeasuredValueFlags::NONE : \Entities\MeasuredValueFlags::MISSED,
