@@ -5,6 +5,7 @@ namespace MeasuredSources\Araizeki {
     require_once APPPATH.'models/Entities/MeasuredValueFlags.php';
     require_once APPPATH.'models/HttpGetter.php';
     require_once APPPATH.'models/HttpHeaderParser.php';
+    require_once APPPATH.'models/HttpEntitiySpaceReplacer.php';
     require_once APPPATH.'models/MeasuredSources/IMeasuredSourceCollector.php';
 
     class AraizekiCollector implements \MeasuredSources\IMeasuredSourceCollector {
@@ -34,16 +35,11 @@ namespace MeasuredSources\Araizeki {
             $div = $document->getElementById(self::ANCESTOR_DIV_ID);
             if ($div !== null) {
                 $list_items = $div->getElementsByTagName("li");
-                $replace = array('&nbsp;', '&emsp;', '&ensp;');
-                $replace = array_merge(
-                    $replace,
-                    array_map(function($s) {
-                        return html_entity_decode($s, ENT_COMPAT, 'UTF-8');
-                    }, $replace));
+                $replacer = new \HttpEntitiySpaceReplacer();
                 
                 foreach ($list_items as $list_item) {
-                    $text = str_replace($replace, ' ', $list_item->textContent);
-                    $text = mb_convert_kana($text, 'as');
+                    $text = mb_convert_kana(
+                        $replacer->replace($list_item->textContent), 'as');
                     if (preg_match("/現在の洗堰放流量\s*(\d+(?:\.\d+)?)m³\/s/", $text, $matches)) {
                         return array(
                             array(
