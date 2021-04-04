@@ -1,17 +1,32 @@
 <?php
 namespace MeasuredSources\Wakayama {
     defined('BASEPATH') OR exit('No direct script access allowed');
-    require_once APPPATH.'models/Entities/MeasuredValueTypes.php';
     require_once APPPATH.'models/Entities/MeasuredValueFlags.php';
     require_once APPPATH.'models/HttpGetter.php';
     require_once APPPATH.'models/HttpHeaderParser.php';
+    require_once APPPATH.'models/MeasuredSources/Wakayama/LevelValueTypeProvider.php';
+    require_once APPPATH.'models/MeasuredSources/Wakayama/DamInflowValueTypeProvider.php';
+    require_once APPPATH.'models/MeasuredSources/Wakayama/DamOutflowValueTypeProvider.php';
     require_once APPPATH.'models/MeasuredSources/IMeasuredSourceCollector.php';
 
     class WakayamaCollector implements \MeasuredSources\IMeasuredSourceCollector {
         private $source_url = null;
         private $value_type_provider = null;
         
-        public function __construct($db, IValueTypeProvider $value_type_provider, $source_url) {
+
+        public static function create_level($db, $source_url) {
+            return new WakayamaCollector($db, new LevelValueTypeProvider(), $source_url);
+        }
+
+        public static function create_dam_inflow($db, $source_url) {
+            return new WakayamaCollector($db, new DamInflowValueTypeProvider(), $source_url);
+        }
+
+        public static function create_dam_outflow($db, $source_url) {
+            return new WakayamaCollector($db, new DamInflowValueTypeProvider(), $source_url);
+        }
+
+        private function __construct($db, IValueTypeProvider $value_type_provider, $source_url) {
             $this->value_type_provider = $value_type_provider;
             $this->source_url = $source_url;
         }
