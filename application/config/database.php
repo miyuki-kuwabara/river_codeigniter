@@ -74,12 +74,12 @@ $active_group = 'default';
 $query_builder = TRUE;
 
 $db['default'] = array(
-	'dsn'	=> '',
-	'hostname' => 'localhost',
+	'dsn'	   => 'mysql:host=localhost; dbname=LA61037255-frograindrop; charset=utf8;',
+	'hostname' => '',
 	'username' => 'root',
 	'password' => 'ch3cooh',
-	'database' => 'LA61037255-frograindrop',
-	'dbdriver' => 'mysqli',
+	'database' => '',
+	'dbdriver' => 'pdo',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
 	'db_debug' => (ENVIRONMENT !== 'production'),
