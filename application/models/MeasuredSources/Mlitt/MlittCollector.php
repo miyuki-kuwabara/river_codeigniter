@@ -29,7 +29,6 @@ namespace MeasuredSources\Mlitt {
             $getter = new \HttpGetter();
             $download_url = $this->get_download_url($getter);
             if ($download_url === null) return null;
-            var_dump($download_url);
 
             $data = $this->get_level_data($getter, $download_url);
             return $data;
