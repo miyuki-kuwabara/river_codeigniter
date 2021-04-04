@@ -4,6 +4,7 @@ namespace MeasuredSources {
     require_once APPPATH.'models/MeasuredSources/Mlitt/MlittCollector.php';
     require_once APPPATH.'models/MeasuredSources/Araizeki/AraizekiCollector.php';
     require_once APPPATH.'models/MeasuredSources/Wakayama/WakayamaCollector.php';
+    require_once APPPATH.'models/MeasuredSources/Nara/NaraCollector.php';
 
     class MeasuredSourceFactory {
         public static function create_mlitt($db) {
@@ -28,6 +29,10 @@ namespace MeasuredSources {
 
         public static function create_wakayama_dam_outflow($db) {
             return Wakayama\WakayamaCollector::create_dam_outflow($db, 'http://kasensabo02.pref.wakayama.lg.jp/keitai/dam/501-1.html');
+        }
+
+        public static function create_nara($db) {
+            return new Nara\NaraCollector($db, 'http://www.kasen.pref.nara.jp/sppub/status/river_log_1_131.html');
         }
     }
 }
