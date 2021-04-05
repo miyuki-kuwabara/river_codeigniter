@@ -1,35 +1,23 @@
 <?php
-namespace MeasuredSources\Wakayama {
+namespace MeasuredSources\Gifu {
     defined('BASEPATH') OR exit('No direct script access allowed');
     require_once APPPATH.'models/Entities/MeasuredValueFlags.php';
+    require_once APPPATH.'models/Entities/MeasuredValueTypes.php';
     require_once APPPATH.'models/HttpGetter.php';
     require_once APPPATH.'models/HttpHeaderParser.php';
+    require_once APPPATH.'models/HttpEntitiySpaceReplacer.php';
     require_once APPPATH.'models/MeasuredSources/MeasuredDateNormalizer.php';
-    require_once APPPATH.'models/MeasuredSources/Wakayama/LevelValueTypeProvider.php';
-    require_once APPPATH.'models/MeasuredSources/Wakayama/DamInflowValueTypeProvider.php';
-    require_once APPPATH.'models/MeasuredSources/Wakayama/DamOutflowValueTypeProvider.php';
     require_once APPPATH.'models/MeasuredSources/IMeasuredSourceCollector.php';
 
-    class WakayamaCollector implements \MeasuredSources\IMeasuredSourceCollector {
+    class GifuCollector implements \MeasuredSources\IMeasuredSourceCollector {
         private $source_url = null;
-        private $value_type_provider = null;
-        
+        private $entity_space_replacer = null;
+        private $measured_date_normalizer = null;
 
-        public static function create_level($db, $source_url) {
-            return new WakayamaCollector($db, new LevelValueTypeProvider(), $source_url);
-        }
-
-        public static function create_dam_inflow($db, $source_url) {
-            return new WakayamaCollector($db, new DamInflowValueTypeProvider(), $source_url);
-        }
-
-        public static function create_dam_outflow($db, $source_url) {
-            return new WakayamaCollector($db, new DamInflowValueTypeProvider(), $source_url);
-        }
-
-        private function __construct($db, IValueTypeProvider $value_type_provider, $source_url) {
-            $this->value_type_provider = $value_type_provider;
+        public function __construct($db, $source_url) {
             $this->source_url = $source_url;
+            $this->entity_space_replacer = new \HttpEntitiySpaceReplacer();
+            $this->measured_date_normalizer = new \MeasuredSources\MeasuredDateNormalizer();
         }
 
         public function get() {
@@ -49,25 +37,26 @@ namespace MeasuredSources\Wakayama {
             if ($load === false) return null;
 
             $pres = $document->getElementsByTagName('pre');
-            foreach ($pres as $pre) {
-                $result = $this->extract($pre->textContent, $date);
+            for ($i = $pres->length - 1; 0 <= $i; $i--) {
+                $content = $pres->item($i)->textContent;
+                $result = $this->extract(
+                    $this->entity_space_replacer->replace($content),
+                    $date);
                 if (!empty($result)) return $result;
             }
             return array();
         }
 
         private function extract($content, $acquired_at) {
-            $normalizer = new \MeasuredSources\MeasuredDateNormalizer();
             $datum = array();
-            $value_type = $this->value_type_provider->get();
             foreach (explode("\n", $content) as $line) {
-                if (preg_match('/(\d{1,2}:\d{2})\s+(\S+)/', $content, $matches)) {
-                    $measured_at = $normalizer->normalize_time($matches[1]);
+                if (preg_match('/(\d{1,2}:\d{2})\s+(\d+(?:\.\d+)?)/', $content, $matches)) {
+                    $measured_at = $this->measured_date_normalizer->normalize_time($matches[1]);
                     if ($measured_at === null) continue;
                     $value = is_numeric($matches[2]) ? $matches[2] - 0 : null;
                     $datum[] = array(
                         'measured_at' => $measured_at,
-                        'value_type' => $value_type,
+                        'value_type' => \Entities\MeasuredValueTypes::WATER_LEVEL,
                         'value' => $value,
                         'flags' => isset($value) ? \Entities\MeasuredValueFlags::NONE : \Entities\MeasuredValueFlags::MISSED,
                         'acquired_at' => $acquired_at,

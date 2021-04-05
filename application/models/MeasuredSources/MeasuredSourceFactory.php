@@ -5,6 +5,7 @@ namespace MeasuredSources {
     require_once APPPATH.'models/MeasuredSources/Araizeki/AraizekiCollector.php';
     require_once APPPATH.'models/MeasuredSources/Wakayama/WakayamaCollector.php';
     require_once APPPATH.'models/MeasuredSources/Nara/NaraCollector.php';
+    require_once APPPATH.'models/MeasuredSources/Gifu/GifuCollector.php';
 
     class MeasuredSourceFactory {
         public static function create_mlitt($db) {
@@ -33,6 +34,10 @@ namespace MeasuredSources {
 
         public static function create_nara($db) {
             return new Nara\NaraCollector($db, 'http://www.kasen.pref.nara.jp/sppub/status/river_log_1_131.html');
+        }
+
+        public static function create_gifu($db) {
+            return new Gifu\GifuCollector($db, 'http://www.kasen.pref.gifu.lg.jp/h/Valley_6_382.html');
         }
     }
 }
