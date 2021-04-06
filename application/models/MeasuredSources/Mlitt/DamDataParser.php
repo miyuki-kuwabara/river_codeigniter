@@ -4,7 +4,8 @@ namespace MeasuredSources\Mlitt {
     require_once APPPATH.'models/MeasuredSources/Mlitt/IDataParser.php';
     require_once APPPATH.'models/MeasuredSources/Mlitt/MeasuredValuesParser.php';
     
-    class DamDataParser implements IDataParser {
+    class DamDataParser implements IDataParser
+    {
         private $columns = array(
             '年月日' => array(
                 'key' => 'measured_at_date',
@@ -57,7 +58,8 @@ namespace MeasuredSources\Mlitt {
             'amount_of_storage' => \Entities\MeasuredValueTypes::AMOUNT_OF_STORAGE,
         );
   
-        public function parse($content, $acquired_at) {
+        public function parse($content, $acquired_at)
+        {
             $datum = array();
             $indexes = null;
             $headers = array_keys($this->columns);
@@ -72,17 +74,19 @@ namespace MeasuredSources\Mlitt {
                     }
                 } elseif (isset($indexes)) {
                     $result = $this->extract_data($indexes, $columns, $acquired_at);
-                    if (!empty($result)) $datum = array_merge($datum, $result);
-
-                } else;
+                    if (!empty($result)) {
+                        $datum = array_merge($datum, $result);
+                    }
+                } else ;
             }
             return $datum;
         }
 
-        private function extract_headers($headers) {
+        private function extract_headers($headers)
+        {
             $columns = $this->columns;
             return array_reduce(
-                $headers, 
+                $headers,
                 function ($dictionary, $header) use ($columns) {
                     $dictionary[] = array_key_exists($header, $columns)
                         ? $columns[$header]
@@ -91,7 +95,8 @@ namespace MeasuredSources\Mlitt {
                 }, array());
         }
 
-        private function extract_data($indexes, $columns, $acquired_at) {
+        private function extract_data($indexes, $columns, $acquired_at)
+        {
             $extracted = array();
             $parser = new MeasuredValuesParser();
             foreach ($indexes as $i => $index) {
@@ -120,6 +125,5 @@ namespace MeasuredSources\Mlitt {
             }
             return $datum;
         }
-    }    
+    }
 }
-

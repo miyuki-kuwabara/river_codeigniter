@@ -1,6 +1,6 @@
 <?php
 namespace MeasuredSources\Araizeki {
-    defined('BASEPATH') OR exit('No direct script access allowed');
+    defined('BASEPATH') or exit('No direct script access allowed');
     require_once APPPATH.'models/Entities/MeasuredValueTypes.php';
     require_once APPPATH.'models/Entities/MeasuredValueFlags.php';
     require_once APPPATH.'models/HttpGetter.php';
@@ -8,21 +8,25 @@ namespace MeasuredSources\Araizeki {
     require_once APPPATH.'models/HttpEntitiySpaceReplacer.php';
     require_once APPPATH.'models/MeasuredSources/IMeasuredSourceCollector.php';
 
-    class AraizekiCollector implements \MeasuredSources\IMeasuredSourceCollector {
+    class AraizekiCollector implements \MeasuredSources\IMeasuredSourceCollector
+    {
         const ANCESTOR_DIV_ID = "idx-saigai";
         private $source_url = null;
         
-        public function __construct($db, $source_url) {
+        public function __construct($db, $source_url)
+        {
             $this->source_url = $source_url;
         }
 
-        public function get() {
+        public function get()
+        {
             $getter = new \HttpGetter();
             $data = $this->get_level_data($getter);
             return $data;
         }
 
-        private function get_level_data(\HttpGetter $getter) {
+        private function get_level_data(\HttpGetter $getter)
+        {
             $response = $getter->get($this->source_url);
             $date = date('Y-m-d H:i:s');
 
@@ -30,7 +34,9 @@ namespace MeasuredSources\Araizeki {
             
             $document = new \DOMDocument();
             $load = $document->loadHTML($response);
-            if ($load === false) return null;
+            if ($load === false) {
+                return null;
+            }
 
             $div = $document->getElementById(self::ANCESTOR_DIV_ID);
             if ($div !== null) {
@@ -47,7 +53,7 @@ namespace MeasuredSources\Araizeki {
                                 'value_type' => \Entities\MeasuredValueTypes::OUTFLOW,
                                 'value' => $matches[1] - 0,
                                 'flags' => \Entities\MeasuredValueFlags::NONE,
-                                'acquired_at' => $date, 
+                                'acquired_at' => $date,
                             )
                         );
                     }
@@ -57,11 +63,10 @@ namespace MeasuredSources\Araizeki {
                     'value_type' => \Entities\MeasuredValueTypes::OUTFLOW,
                     'value' => null,
                     'flags' => \Entities\MeasuredValueFlags::MISSED,
-                    'acquired_at' => $date, 
+                    'acquired_at' => $date,
                 );
             }
             return array();
         }
-    }    
+    }
 }
-

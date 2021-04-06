@@ -1,14 +1,16 @@
 <?php
 namespace MeasuredSources {
-    defined('BASEPATH') OR exit('No direct script access allowed');
-    class MeasuredDateNormalizer {
+    defined('BASEPATH') or exit('No direct script access allowed');
+    class MeasuredDateNormalizer
+    {
         private $year = null;
         private $month = null;
         private $day = null;
         private $hour = null;
         private $minute = null;
 
-        public function __construct() {
+        public function __construct()
+        {
             $now = localtime(time(), true);
             $this->year = $now['tm_year'] + 1900;
             $this->month = $now['tm_mon'] + 1;
@@ -17,7 +19,8 @@ namespace MeasuredSources {
             $this->minute = $now['tm_min'];
         }
 
-        public function normalize_time($timestr) {
+        public function normalize_time($timestr)
+        {
             if (preg_match('/\b(\d{1,2}):(\d{2})\b/', $timestr, $matches)) {
                 $hour = intval($matches[1]);
                 $minute = intval($matches[2]);
@@ -31,7 +34,8 @@ namespace MeasuredSources {
             return null;
         }
 
-        public function normalize_date($datestr) {
+        public function normalize_date($datestr)
+        {
             if (preg_match('/\b(?:(\d{4})\/)?\b(\d{1,2})\/(\d{1,2})\b/', $datestr, $matches)) {
                 $year = $matches[1] === '' ? null : intval($matches[1]);
                 $month = intval($matches[2]);
@@ -43,7 +47,8 @@ namespace MeasuredSources {
             return null;
         }
 
-        public function normalize_datetime($datetimestr) {
+        public function normalize_datetime($datetimestr)
+        {
             if (preg_match('/\b(?:(\d{4})\/)?\b(\d{1,2})\/(\d{1,2})\s+(\d{1,2}):(\d{2})\b/', $datetimestr, $matches)) {
                 $year = $matches[1] === '' ? null : intval($matches[1]);
                 $month = intval($matches[2]);
@@ -57,7 +62,8 @@ namespace MeasuredSources {
             return null;
         }
 
-        private function get_normalized_timestamp($year, $month, $day, $hour = 0, $minute = 0) {
+        private function get_normalized_timestamp($year, $month, $day, $hour = 0, $minute = 0)
+        {
             if (is_null($year)) {
                 if ($this->month < $month || ($this->month === $month && $this->day < $day)) {
                     $year = $this->year - 1;

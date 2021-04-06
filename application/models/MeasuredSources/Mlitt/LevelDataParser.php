@@ -4,7 +4,8 @@ namespace MeasuredSources\Mlitt {
     require_once APPPATH.'models/MeasuredSources/Mlitt/IDataParser.php';
     require_once APPPATH.'models/MeasuredSources/Mlitt/MeasuredValuesParser.php';
     
-    class LevelDataParser implements IDataParser {
+    class LevelDataParser implements IDataParser
+    {
         private $columns = array(
             '日付' => array(
                 'key' => 'measured_at_date',
@@ -24,7 +25,8 @@ namespace MeasuredSources\Mlitt {
             ),
         );
 
-        public function parse($content, $acquired_at) {
+        public function parse($content, $acquired_at)
+        {
             $datum = array();
             $indexes = null;
             $headers = array_keys($this->columns);
@@ -39,17 +41,19 @@ namespace MeasuredSources\Mlitt {
                     }
                 } elseif (isset($indexes)) {
                     $result = $this->extract_data($indexes, $columns, $acquired_at);
-                    if (!empty($result)) $datum[] = $result;
-
-                } else;
+                    if (!empty($result)) {
+                        $datum[] = $result;
+                    }
+                } else ;
             }
             return $datum;
         }
 
-        private function extract_headers($headers) {
+        private function extract_headers($headers)
+        {
             $columns = $this->columns;
             return array_reduce(
-                $headers, 
+                $headers,
                 function ($dictionary, $header) use ($columns) {
                     $dictionary[] = array_key_exists($header, $columns)
                         ? $columns[$header]
@@ -58,7 +62,8 @@ namespace MeasuredSources\Mlitt {
                 }, array());
         }
 
-        private function extract_data($indexes, $columns, $acquired_at) {
+        private function extract_data($indexes, $columns, $acquired_at)
+        {
             $extracted = array();
             $parser = new MeasuredValuesParser();
             
@@ -81,6 +86,5 @@ namespace MeasuredSources\Mlitt {
                 'acquired_at' => $acquired_at,
             );
         }
-    }    
+    }
 }
-

@@ -1,6 +1,7 @@
 <?php
 namespace Entities {
-    class MeasuredValueTypes {
+    class MeasuredValueTypes
+    {
         const WATER_LEVEL = 1;
         const INFLOW = 2;
         const OUTFLOW = 3;

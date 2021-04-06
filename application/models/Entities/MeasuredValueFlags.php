@@ -1,6 +1,7 @@
 <?php
 namespace Entities {
-    class MeasuredValueFlags {
+    class MeasuredValueFlags
+    {
         const NONE = 0;
         const TEMPORARY = 1;
         const MISSED = 2;
