@@ -17,7 +17,7 @@ CREATE TABLE `river_measure_sources` (
 ENGINE = InnoDB;
 
 CREATE TABLE `river_measure_values` (
-  `measure_value_id` INT NOT NULL COMMENT '測定値ID',
+  `id` INT NOT NULL COMMENT '測定値ID',
   `measure_source_id` INT NOT NULL COMMENT 'ソースID',
   `type` TINYINT NOT NULL COMMENT 'データ種別(1: 水位、2: ダム流入、3: ダム放流、4: 貯水率)',
   `name` VARCHAR(12) NOT NULL COMMENT '測定値名',
@@ -25,7 +25,7 @@ CREATE TABLE `river_measure_values` (
   `link_uri` VARCHAR(45) NULL COMMENT '水位集計ページリンク用URL（データ取得元と別に指定する場合）',
   `created_at` DATETIME NOT NULL COMMENT '作成日時',
   `modified_at` DATETIME NOT NULL COMMENT '更新日時',
-  PRIMARY KEY (`measure_value_id`),
+  PRIMARY KEY (`id`),
   UNIQUE KEY (`measure_source_id`, `type`)
 );
 CREATE INDEX `idex_river_measure_value_1`
