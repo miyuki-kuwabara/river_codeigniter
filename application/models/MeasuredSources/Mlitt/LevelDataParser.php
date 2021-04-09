@@ -78,8 +78,12 @@ namespace MeasuredSources\Mlitt {
                 return null;
             }
 
+            $measured_at = $parser->make_date_from_parsed(
+                $extracted['measured_at_date'],
+                $extracted['measured_at_time']);
+            
             return  array(
-                'measured_at' => "{$extracted['measured_at_date']} {$extracted['measured_at_time']}",
+                'measured_at' => $measured_at,
                 'value_type' => \Entities\MeasuredValueTypes::WATER_LEVEL,
                 'value' => $extracted['value'],
                 'flags' => $extracted['flags'],

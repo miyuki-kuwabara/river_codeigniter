@@ -106,7 +106,9 @@ namespace MeasuredSources\Mlitt {
                 }
             }
             if (isset($extracted['measured_at_date']) && isset($extracted['measured_at_time'])) {
-                $measured_at = "{$extracted['measured_at_date']} {$extracted['measured_at_time']}";
+                $measured_at = $parser->make_date_from_parsed(
+                    $extracted['measured_at_date'],
+                    $extracted['measured_at_time']);
             }
             
             $datum = array();

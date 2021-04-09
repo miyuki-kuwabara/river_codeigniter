@@ -9,18 +9,34 @@ namespace MeasuredSources\Mlitt {
             if (!preg_match('/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/', $s, $matches)) {
                 return null;
             }
-            if (!checkdate($matches[2] - 0, $matches[3] - 0, $matches[1] - 0)) {
+            $year = $matches[1] - 0;
+            $month = $matches[2] - 0;
+            $day = $matches[3] - 0;
+
+            if (!checkdate($month, $day, $year)) {
                 return null;
             }
-            return $s;
+            
+            return array($year, $month, $day);
         }
 
         public static function parse_time($s)
         {
-            if (!preg_match('/^\d{2}:\d{2}$/', $s)) {
+            if (!preg_match('/^(\d{2}):(\d{2})$/', $s, $matches)) {
                 return null;
             }
-            return $s;
+            return array($matches[1] - 0, $matches[2] - 0);
+        }
+
+        public static function make_date_from_parsed($date_array, $time_array)
+        {
+            return date('Y-m-d H:i:s', mktime(
+                $time_array[0],
+                $time_array[1],
+                0,
+                $date_array[1],
+                $date_array[2],
+                $date_array[0]));
         }
 
         public static function parse_numeric($s)
