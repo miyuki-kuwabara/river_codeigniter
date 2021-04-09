@@ -32,7 +32,7 @@ namespace MeasuredSources\Nara {
         private function get_level_data(\HttpGetter $getter)
         {
             $response = $getter->get($this->source_url);
-            $date = date('Y-m-d H:i:s');
+            $date = new \DateTime();
 
             libxml_use_internal_errors(true);
             

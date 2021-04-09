@@ -1,6 +1,7 @@
 <?php
 namespace MeasuredSources {
-    defined('BASEPATH') or exit('No direct script access allowed');
+
+defined('BASEPATH') or exit('No direct script access allowed');
     class MeasuredDateNormalizer
     {
         private $year = null;
@@ -29,7 +30,7 @@ namespace MeasuredSources {
                 } else {
                     $timestamp = mktime($hour, $minute, 0, $this->month, $this->day, $this->year);
                 }
-                return date('Y-m-d H:i', $timestamp);
+                return new \DateTime("@$timestamp");
             }
             return null;
         }
@@ -42,7 +43,7 @@ namespace MeasuredSources {
                 $day = intval($matches[3]);
 
                 $timestamp = $this->get_normalized_timestamp($year, $month, $day);
-                return date('Y-m-d', $timestamp);
+                return new \DateTime("@$timestamp");
             }
             return null;
         }
@@ -57,7 +58,7 @@ namespace MeasuredSources {
                 $minute = intval($matches[5]);
 
                 $timestamp = $this->get_normalized_timestamp($year, $month, $day, $hour, $minute);
-                return date('Y-m-d H:i', $timestamp);
+                return new \DateTime("@$timestamp");
             }
             return null;
         }

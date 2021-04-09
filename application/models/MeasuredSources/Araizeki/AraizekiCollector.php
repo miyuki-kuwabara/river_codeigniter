@@ -1,6 +1,7 @@
 <?php
 namespace MeasuredSources\Araizeki {
-    defined('BASEPATH') or exit('No direct script access allowed');
+
+defined('BASEPATH') or exit('No direct script access allowed');
     require_once APPPATH.'models/Entities/MeasuredValueTypes.php';
     require_once APPPATH.'models/Entities/MeasuredValueFlags.php';
     require_once APPPATH.'models/HttpGetter.php';
@@ -28,7 +29,7 @@ namespace MeasuredSources\Araizeki {
         private function get_level_data(\HttpGetter $getter)
         {
             $response = $getter->get($this->source_url);
-            $date = date('Y-m-d H:i:s');
+            $date = new \DateTime();
 
             libxml_use_internal_errors(true);
             

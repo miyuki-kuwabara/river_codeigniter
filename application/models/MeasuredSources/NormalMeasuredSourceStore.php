@@ -7,11 +7,13 @@ namespace MeasuredSources {
     {
         private $db = null;
         private $id = null;
+        private $date_from = null;
 
         public function __construct($db, $id)
         {
             $this->db = $db;
             $this->id = $id;
+            $this->date_from = strtotime('-1 day');
         }
 
         public function store($datum)
@@ -22,6 +24,7 @@ namespace MeasuredSources {
 
             $this->db->trans_start();
             
+            $this->delete_old_data();
             $this->update_or_insert(
                 $this->filter_datum($datum));
 
@@ -30,8 +33,10 @@ namespace MeasuredSources {
 
         private function filter_datum($datum)
         {
-            return array_filter($datum, function ($data) {
-                return preg_match('/\s+\d{2}:00$/', $data['measured_at']) == 1;
+            $date_from = $this->date_from;
+            return array_filter($datum, function ($data) use ($date_from) {
+                return $date_from <= $data['measured_at']->getTimestamp()
+                    && $data['measured_at']->format('i:s') === '00:00';
             });
         }
 
@@ -43,9 +48,9 @@ namespace MeasuredSources {
                 $this->db
                     ->set('value', $data['value'])
                     ->set('flags', $data['flags'])
-                    ->set('acquired_at', $data['acquired_at'])
+                    ->set('acquired_at', $data['acquired_at']->format('Y-m-d H:i:s'))
                     ->where('measure_source_id', $this->id)
-                    ->where('measured_at', $data['measured_at'])
+                    ->where('measured_at', $data['measured_at']->format('Y-m-d H:i'))
                     ->where('value_type', $data['value_type'])
                     ->update('river_measured_data');
                 if ($this->db->affected_rows() == 0) {
@@ -60,17 +65,25 @@ namespace MeasuredSources {
             $rows = array_map(function ($data) use ($id) {
                 return array(
                     'measure_source_id' => $id,
-                    'measured_at' => $data['measured_at'],
+                    'measured_at' => $data['measured_at']->format('Y-m-d H:i'),
                     'value_type' => $data['value_type'],
                     'value' => $data['value'],
                     'flags' => $data['flags'],
-                    'acquired_at' => $data['acquired_at'],
+                    'acquired_at' => $data['acquired_at']->format('Y-m-d H:i:s'),
                 );
             }, $remain);
 
             $this->db
                 ->set_insert_batch($rows)
                 ->insert_batch('river_measured_data');
+        }
+
+        private function delete_old_data()
+        {
+            $this->db
+                ->where('measure_source_id', $this->id)
+                ->where('measured_at <', date('Y-m-d H:i', $this->date_from))
+                ->delete('river_measured_data');
         }
     }
 }

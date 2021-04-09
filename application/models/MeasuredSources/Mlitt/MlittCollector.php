@@ -111,7 +111,7 @@ namespace MeasuredSources\Mlitt {
                     ? $header_parser->get_last_modified()
                     : $header_parser->get_date();
             }
-            $date = date('Y-m-d H:i:s', $timestamp);
+            $date = new \DateTime("@$timestamp");
 
             $content = isset($encoding)
                 ? mb_convert_encoding($response['content'], 'UTF-8', $encoding)

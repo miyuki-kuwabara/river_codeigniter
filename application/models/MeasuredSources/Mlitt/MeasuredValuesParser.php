@@ -30,13 +30,14 @@ namespace MeasuredSources\Mlitt {
 
         public static function make_date_from_parsed($date_array, $time_array)
         {
-            return date('Y-m-d H:i', mktime(
+            $timestamp = mktime(
                 $time_array[0],
                 $time_array[1],
                 0,
                 $date_array[1],
                 $date_array[2],
-                $date_array[0]));
+                $date_array[0]);
+            return new \DateTime("@$timestamp");
         }
 
         public static function parse_numeric($s)
