@@ -15,7 +15,7 @@ namespace MeasuredSources {
     class MeasuredSourceFactory
     {
         /**
-         * 測定値ソースを一括取得する
+         * 測定値ソースを生成する
          *
          * @param \CI_DB $db
          * @param integer $id
