@@ -22,9 +22,17 @@ namespace MeasuredSources {
 
             $this->db->trans_start();
             
-            $this->update_or_insert($datum);
+            $this->update_or_insert(
+                $this->filter_datum($datum));
 
             $this->db->trans_complete();
+        }
+
+        private function filter_datum($datum)
+        {
+            return array_filter($datum, function ($data) {
+                return preg_match('/\s+\d{2}:00$/', $data['measured_at']) == 1;
+            });
         }
 
         private function update_or_insert($datum)

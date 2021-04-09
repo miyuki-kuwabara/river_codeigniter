@@ -30,7 +30,7 @@ namespace MeasuredSources\Mlitt {
 
         public static function make_date_from_parsed($date_array, $time_array)
         {
-            return date('Y-m-d H:i:s', mktime(
+            return date('Y-m-d H:i', mktime(
                 $time_array[0],
                 $time_array[1],
                 0,
