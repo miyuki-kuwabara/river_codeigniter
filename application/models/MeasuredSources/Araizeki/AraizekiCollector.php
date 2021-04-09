@@ -13,7 +13,7 @@ namespace MeasuredSources\Araizeki {
         const ANCESTOR_DIV_ID = "idx-saigai";
         private $source_url = null;
         
-        public function __construct($db, $source_url)
+        public function __construct($source_url)
         {
             $this->source_url = $source_url;
         }

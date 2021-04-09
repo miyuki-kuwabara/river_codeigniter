@@ -16,22 +16,22 @@ namespace MeasuredSources\Wakayama {
         private $value_type_provider = null;
         
 
-        public static function create_level($db, $source_url)
+        public static function create_level($source_url)
         {
-            return new WakayamaCollector($db, new LevelValueTypeProvider(), $source_url);
+            return new WakayamaCollector(new LevelValueTypeProvider(), $source_url);
         }
 
-        public static function create_dam_inflow($db, $source_url)
+        public static function create_dam_inflow($source_url)
         {
-            return new WakayamaCollector($db, new DamInflowValueTypeProvider(), $source_url);
+            return new WakayamaCollector(new DamInflowValueTypeProvider(), $source_url);
         }
 
-        public static function create_dam_outflow($db, $source_url)
+        public static function create_dam_outflow($source_url)
         {
-            return new WakayamaCollector($db, new DamInflowValueTypeProvider(), $source_url);
+            return new WakayamaCollector(new DamInflowValueTypeProvider(), $source_url);
         }
 
-        private function __construct($db, IValueTypeProvider $value_type_provider, $source_url)
+        private function __construct(IValueTypeProvider $value_type_provider, $source_url)
         {
             $this->value_type_provider = $value_type_provider;
             $this->source_url = $source_url;

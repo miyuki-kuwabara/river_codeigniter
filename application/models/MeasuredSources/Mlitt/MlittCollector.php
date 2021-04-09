@@ -13,17 +13,17 @@ namespace MeasuredSources\Mlitt {
         private $source_url = null;
         private $data_parser = null;
 
-        public static function create_level($db, $source_url)
+        public static function create_level($source_url)
         {
-            return new MlittCollector($db, new LevelDataParser(), $source_url);
+            return new MlittCollector(new LevelDataParser(), $source_url);
         }
 
-        public static function create_dam($db, $source_url)
+        public static function create_dam($source_url)
         {
-            return new MlittCollector($db, new DamDataParser(), $source_url);
+            return new MlittCollector(new DamDataParser(), $source_url);
         }
         
-        private function __construct($db, IDataParser $data_parser, $source_url)
+        private function __construct(IDataParser $data_parser, $source_url)
         {
             $this->data_parser = $data_parser;
             $this->source_url = $source_url;

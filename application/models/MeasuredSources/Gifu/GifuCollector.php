@@ -15,7 +15,7 @@ namespace MeasuredSources\Gifu {
         private $entity_space_replacer = null;
         private $measured_date_normalizer = null;
 
-        public function __construct($db, $source_url)
+        public function __construct($source_url)
         {
             $this->source_url = $source_url;
             $this->entity_space_replacer = new \HttpEntitiySpaceReplacer();
