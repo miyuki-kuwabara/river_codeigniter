@@ -34,23 +34,23 @@ namespace MeasuredSources {
         {
             switch ($type) {
             case \Entities\MeasuredSourceTypes::MLITT_LEVEL:                  // 国土交通省水位
-                return self::create_mlitt($uri);
+                return Mlitt\MlittCollector::create_level($uri);
             case \Entities\MeasuredSourceTypes::MLITT_DAM:                    // 国土交通省ダム
-                return self::create_mlitt_dam($uri);
+                return Mlitt\MlittCollector::create_dam($uri);
             case \Entities\MeasuredSourceTypes::WAKAYAMA_LEVEL:               // 和歌山県水位
-                return self::create_wakayama_level($uri);
+                return Wakayama\WakayamaCollector::create_level($uri);
             case \Entities\MeasuredSourceTypes::WAKAYAMA_DAM_INFLOW:          // 和歌山県ダム流入
-                return self::create_wakayama_dam_inflow($uri);
+                return Wakayama\WakayamaCollector::create_dam_inflow($uri);
             case \Entities\MeasuredSourceTypes::WAKAYAMA_DAM_OUTFLOW:         // 和歌山県ダム放流
-                return self::create_wakayama_dam_outflow($uri);
+                return Wakayama\WakayamaCollector::create_dam_outflow($uri);
             case \Entities\MeasuredSourceTypes::ARAIZEKI:                     // 南郷洗堰
-                return self::create_araizeki($uri);
+                return new Araizeki\AraizekiCollector($uri);
             case \Entities\MeasuredSourceTypes::NARA_LEVEL:                   // 奈良県河川情報システム水位
-                return self::create_nara($uri);
+                return new Nara\NaraCollector($uri);
             case \Entities\MeasuredSourceTypes::GIFU_LEVEL:                  // 岐阜県川の防災情報水位
-                return self::create_gifu($uri);
+                return new Gifu\GifuCollector($uri);
             case \Entities\MeasuredSourceTypes::AICHI_LEVEL:                 // 愛知県 川の防災情報水位
-                return self::create_aichi($uri);
+                return new Aichi\AichiCollector($uri);
             case \Entities\MeasuredSourceTypes::WAKAYAMA_DAM_STORAGE_LEVEL:   // 和歌山県ダム貯水位(予約)
             case \Entities\MeasuredSourceTypes::WAKAYAMA_DAM_STORAGE_VOLUME:  // 和歌山県ダム貯水量(予約)
             default:
@@ -62,51 +62,6 @@ namespace MeasuredSources {
         {
             //TODO: 分岐は後で
             return new NormalMeasuredSourceStore($db, $id);
-        }
-
-        private static function create_mlitt($uri)
-        {
-            return Mlitt\MlittCollector::create_level($uri);
-        }
-
-        private static function create_mlitt_dam($uri)
-        {
-            return Mlitt\MlittCollector::create_dam($uri);
-        }
-
-        private static function create_araizeki($uri)
-        {
-            return new Araizeki\AraizekiCollector($uri);
-        }
-
-        private static function create_wakayama_level($uri)
-        {
-            return Wakayama\WakayamaCollector::create_level($uri);
-        }
-
-        private static function create_wakayama_dam_inflow($uri)
-        {
-            return Wakayama\WakayamaCollector::create_dam_inflow($uri);
-        }
-
-        private static function create_wakayama_dam_outflow($uri)
-        {
-            return Wakayama\WakayamaCollector::create_dam_outflow($uri);
-        }
-
-        private static function create_nara($uri)
-        {
-            return new Nara\NaraCollector($uri);
-        }
-
-        private static function create_gifu($uri)
-        {
-            return new Gifu\GifuCollector($uri);
-        }
-        
-        private static function create_aichi($uri)
-        {
-            return new Aichi\AichiCollector($uri);
         }
     }
 }
