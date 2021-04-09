@@ -73,7 +73,7 @@ namespace MeasuredSources\Wakayama {
             $datum = array();
             $value_type = $this->value_type_provider->get();
             foreach (explode("\n", $content) as $line) {
-                if (preg_match('/(\d{1,2}:\d{2})\s+(\S+)/', $content, $matches)) {
+                if (preg_match('/(\d{1,2}:\d{2})\s+(\S+)/', $line, $matches)) {
                     $measured_at = $normalizer->normalize_time($matches[1]);
                     if ($measured_at === null) {
                         continue;
