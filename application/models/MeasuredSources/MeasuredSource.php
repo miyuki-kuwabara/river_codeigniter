@@ -19,6 +19,7 @@ namespace MeasuredSources {
 
         public function update()
         {
+            $this->store->store($this->collector->get());
         }
     }
 }

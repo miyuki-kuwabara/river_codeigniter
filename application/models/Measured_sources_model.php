@@ -6,6 +6,7 @@ class Measured_sources_model extends CI_Model
 {
     public function update()
     {
+        ini_set('max_execution_time', 600);
         $sources = $this->get_update_sources();
         array_walk($sources, function ($source) {
             $source->update();
@@ -22,7 +23,6 @@ class Measured_sources_model extends CI_Model
             ->where('measured_at >=', $latest)
             ->where('value !=', null)
             ->get_compiled_select();
-        print_r($sub_query);
         $query = $this->db
             ->select('id, type, uri')
             ->from('river_measure_sources')
