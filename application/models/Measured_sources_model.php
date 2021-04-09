@@ -15,8 +15,15 @@ class Measured_sources_model extends CI_Model
 
     private function get_update_sources()
     {
+        $latest = date('Y-m-d H:i:s', strtotime('-1 hour'));
+        $sub_araizeki = $this->db
+            ->select('id')
+            ->from('river_measured_data')
+            ->where('river_measure_sources.id = measure_source_id')
+            ->where('measured_at >=', $latest)
+            ->get_compiled_select();
         $latest = date('Y-m-d H') . ':00';
-        $sub_query = $this->db
+        $sub_other = $this->db
             ->select('id')
             ->from('river_measured_data')
             ->where('river_measure_sources.id = measure_source_id')
@@ -26,7 +33,14 @@ class Measured_sources_model extends CI_Model
         $query = $this->db
             ->select('id, type, uri')
             ->from('river_measure_sources')
-            ->where("NOT EXISTS($sub_query)")
+            ->or_group_start()
+                ->where('type', \Entities\MeasuredSourceTypes::ARAIZEKI)
+                ->where("NOT EXISTS($sub_araizeki)")
+            ->group_end()
+            ->or_group_start()
+                ->where('type !=', \Entities\MeasuredSourceTypes::ARAIZEKI)
+                ->where("NOT EXISTS($sub_other)")
+            ->group_end()
             ->get();
         
         $db = $this->db;
