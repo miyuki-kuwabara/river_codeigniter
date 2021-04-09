@@ -74,7 +74,7 @@ namespace MeasuredSources\Aichi {
                         break;
                     }
 
-                    if (preg_match('/(\d{1,2}:\d{2})\s+(\d+(?:\.\d+)?)/', $line, $matches)) {
+                    if (preg_match('/(\d{1,2}:\d{2})\s+(-?\d+(?:\.\d+)?)/', $line, $matches)) {
                         $measured_at = $this->measured_date_normalizer->normalize_time($matches[1]);
                         if ($measured_at === null) {
                             continue;

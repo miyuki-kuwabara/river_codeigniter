@@ -35,7 +35,7 @@ namespace MeasuredSources\Gifu {
             $date = date('Y-m-d H:i:s');
 
             libxml_use_internal_errors(true);
-            
+
             $document = new \DOMDocument();
             $load = $document->loadHTML($response);
             if ($load === false) {
@@ -59,7 +59,7 @@ namespace MeasuredSources\Gifu {
         {
             $datum = array();
             foreach (explode("\n", $content) as $line) {
-                if (preg_match('/(\d{1,2}:\d{2})\s+(\d+(?:\.\d+)?)/', $line, $matches)) {
+                if (preg_match('/(\d{1,2}:\d{2})\s+(-?\d+(?:\.\d+)?)/', $line, $matches)) {
                     $measured_at = $this->measured_date_normalizer->normalize_time($matches[1]);
                     if ($measured_at === null) {
                         continue;
