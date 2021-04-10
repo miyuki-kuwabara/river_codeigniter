@@ -87,16 +87,22 @@ namespace MeasuredSources {
         private function delete_old_data()
         {
             // 期限切れよりさらに1レコード古いものを残す。
+            // MySQLでは変更対象の表をサブクエリで直接参照できないので、一旦SELECTしている。
+            $expired = $this->db
+                ->select('measure_source_id, value_type, measured_at')
+                ->from('river_measured_data')
+                ->where('measure_source_id', $this->id)
+                ->where('measured_at <', date('Y-m-d H:i:s', $this->date_from))
+                ->get_compiled_select();
             $sub_query = $this->db
                 ->select('1', false)
-                ->from('river_measured_data AS expired')
+                ->from("(${expired}) expired", false)
                 ->where('river_measured_data.measure_source_id = expired.measure_source_id')
                 ->where('river_measured_data.value_type = expired.value_type')
                 ->where('river_measured_data.measured_at < expired.measured_at')
-                ->where('expired.measured_at <', date('Y-m-d H:i:s', $this->date_from))
                 ->get_compiled_select();
             $this->db
-                ->where('measure_source_id', $this->id)
+                ->where('river_measured_data.measure_source_id', $this->id)
                 ->where("EXISTS(${sub_query})")
                 ->delete('river_measured_data');
         }
