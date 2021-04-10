@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS `river_measure_sources`;
 CREATE TABLE `river_measure_sources` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT 'ソースID',
   `name` VARCHAR(20) NOT NULL COMMENT 'ソース名',
-  `type` TINYINT NOT NULL COMMENT 'ソース種別(1: 国土交通省水位、2: 国土交通省ダム、3: 和歌山県水位、4: 和歌山県ダム流入、5: 和歌山県ダム放流、6: 和歌山県ダム貯水位、7: 和歌山県ダム貯水量、8: 南郷洗堰)',
+  `type` TINYINT NOT NULL COMMENT 'ソース種別(1: 国土交通省水位、2: 国土交通省ダム、3: 和歌山県水位、4: 和歌山県ダム流入、5: 和歌山県ダム放流、6: 和歌山県ダム貯水位、7: 和歌山県ダム貯水量、8: 南郷洗堰、9: 奈良県河川情報システム水位、10: 岐阜県川の防災情報水位、11: 愛知県 川の防災情報水位)',
   `uri` VARCHAR(255) NOT NULL COMMENT 'データ取得元URI',
   `created_at` DATETIME NOT NULL COMMENT '作成日時',
   `modified_at` DATETIME NOT NULL COMMENT '更新日時',
@@ -17,7 +17,7 @@ CREATE TABLE `river_measure_sources` (
 ENGINE = InnoDB;
 
 CREATE TABLE `river_measure_values` (
-  `measure_value_id` INT NOT NULL COMMENT '測定値ID',
+  `id` INT NOT NULL COMMENT '測定値ID',
   `measure_source_id` INT NOT NULL COMMENT 'ソースID',
   `type` TINYINT NOT NULL COMMENT 'データ種別(1: 水位、2: ダム流入、3: ダム放流、4: 貯水率)',
   `name` VARCHAR(12) NOT NULL COMMENT '測定値名',
@@ -25,7 +25,7 @@ CREATE TABLE `river_measure_values` (
   `link_uri` VARCHAR(45) NULL COMMENT '水位集計ページリンク用URL（データ取得元と別に指定する場合）',
   `created_at` DATETIME NOT NULL COMMENT '作成日時',
   `modified_at` DATETIME NOT NULL COMMENT '更新日時',
-  PRIMARY KEY (`measure_value_id`),
+  PRIMARY KEY (`id`),
   UNIQUE KEY (`measure_source_id`, `type`)
 );
 CREATE INDEX `idex_river_measure_value_1`
