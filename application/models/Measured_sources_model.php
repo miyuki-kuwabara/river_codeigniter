@@ -7,6 +7,7 @@ class Measured_sources_model extends CI_Model
     public function update()
     {
         ini_set('max_execution_time', 600);
+        date_default_timezone_set('Asia/Tokyo');
         $sources = $this->get_update_sources();
         array_walk($sources, function ($source) {
             $source->update();

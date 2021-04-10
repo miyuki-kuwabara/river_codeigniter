@@ -1,6 +1,7 @@
 <?php
 namespace MeasuredSources\Mlitt {
-    require_once APPPATH.'models/Entities/MeasuredValueFlags.php';
+
+require_once APPPATH.'models/Entities/MeasuredValueFlags.php';
 
     class MeasuredValuesParser
     {
@@ -17,7 +18,7 @@ namespace MeasuredSources\Mlitt {
                 return null;
             }
             
-            return array($year, $month, $day);
+            return $s;
         }
 
         public static function parse_time($s)
@@ -25,19 +26,12 @@ namespace MeasuredSources\Mlitt {
             if (!preg_match('/^(\d{2}):(\d{2})$/', $s, $matches)) {
                 return null;
             }
-            return array($matches[1] - 0, $matches[2] - 0);
+            return $s;
         }
 
-        public static function make_date_from_parsed($date_array, $time_array)
+        public static function make_date_from_parsed($date, $time)
         {
-            $timestamp = mktime(
-                $time_array[0],
-                $time_array[1],
-                0,
-                $date_array[1],
-                $date_array[2],
-                $date_array[0]);
-            return new \DateTime("@$timestamp");
+            return new \DateTime("${date} ${time}");
         }
 
         public static function parse_numeric($s)

@@ -1,6 +1,7 @@
 <?php
 namespace MeasuredSources\Mlitt {
-    defined('BASEPATH') or exit('No direct script access allowed');
+
+defined('BASEPATH') or exit('No direct script access allowed');
     require_once APPPATH.'models/HttpGetter.php';
     require_once APPPATH.'models/HttpHeaderParser.php';
     require_once APPPATH.'models/MeasuredSources/IMeasuredSourceCollector.php';
@@ -12,6 +13,7 @@ namespace MeasuredSources\Mlitt {
         const DOWNLOAD_IMG_SRC = "download.gif";
         private $source_url = null;
         private $data_parser = null;
+        private $timezone = null;
 
         public static function create_level($source_url)
         {
@@ -27,6 +29,7 @@ namespace MeasuredSources\Mlitt {
         {
             $this->data_parser = $data_parser;
             $this->source_url = $source_url;
+            $this->timezone = new \DateTimeZone('Asia/Tokyo');
         }
 
         public function get()
@@ -112,6 +115,7 @@ namespace MeasuredSources\Mlitt {
                     : $header_parser->get_date();
             }
             $date = new \DateTime("@$timestamp");
+            $date->setTimezone($this->timezone);
 
             $content = isset($encoding)
                 ? mb_convert_encoding($response['content'], 'UTF-8', $encoding)
