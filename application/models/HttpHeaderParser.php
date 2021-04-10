@@ -1,18 +1,21 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-class HttpHeaderParser {
+defined('BASEPATH') or exit('No direct script access allowed');
+class HttpHeaderParser
+{
     private $headers = array();
     private $content_type = null;
     private $charset = null;
     private $date = null;
     private $last_modified = null;
 
-    public function __construct($headers) {
+    public function __construct($headers)
+    {
         $this->headers = $headers;
         $this->parse();
     }
 
-    private function parse() {
+    private function parse()
+    {
         foreach ($this->headers as $header) {
             if (preg_match('/Content-Type:\s*([^;]+);\s*charset=([-\w]+)/i', $header, $matches)) {
                 $this->content_type = $matches[1];
@@ -35,16 +38,18 @@ class HttpHeaderParser {
         }
     }
 
-    public function get_charset() {
+    public function get_charset()
+    {
         return $this->charset;
     }
 
-    public function get_date() {
+    public function get_date()
+    {
         return $this->date;
     }
 
-    public function get_last_modified() {
+    public function get_last_modified()
+    {
         return $this->last_modified;
     }
-
 }

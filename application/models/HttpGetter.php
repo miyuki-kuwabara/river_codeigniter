@@ -1,13 +1,15 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-class HttpGetter {
-
-    public function get($url, $source_encoding = null) {
+defined('BASEPATH') or exit('No direct script access allowed');
+class HttpGetter
+{
+    public function get($url, $source_encoding = null)
+    {
         $response = $this->get_with_header($url, $source_encoding);
         return $response['content'];
     }
 
-    public function get_with_header($url, $source_encoding = null) {
+    public function get_with_header($url, $source_encoding = null)
+    {
         $context = stream_context_create(
             array(
                 'http'	=> array(
@@ -19,15 +21,15 @@ class HttpGetter {
         $response = file_get_contents($url, false, $context);
         $header = $http_response_header;
 
-        if (isset($source_encoding)) 
+        if (isset($source_encoding)) {
             return array(
                 'header' => $header,
                 'content' => mb_convert_encoding($response, 'UTF-8', $source_encoding),
             );
+        }
         return array(
             'header' => $header,
             'content' => $response,
         );
-
     }
 }
