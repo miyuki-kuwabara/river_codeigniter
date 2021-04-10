@@ -35,7 +35,7 @@ namespace MeasuredSources {
         {
             $date_from = $this->date_from;
             return array_filter($datum, function ($data) use ($date_from) {
-                return $date_from <= $data['measured_at']->getTimestamp()
+                return $date_from <= $data['measured_at']->format('U')
                     && $data['measured_at']->format('i:s') === '00:00';
             });
         }
