@@ -9,6 +9,7 @@ namespace MeasuredSources {
     require_once APPPATH.'models/MeasuredSources/Gifu/GifuCollector.php';
     require_once APPPATH.'models/MeasuredSources/Aichi/AichiCollector.php';
     require_once APPPATH.'models/MeasuredSources/NormalMeasuredSourceStore.php';
+    require_once APPPATH.'models/MeasuredSources/OnlyDifferenceMeasuredSourceStore.php';
     require_once APPPATH.'models/MeasuredSources/NullMeasuredSourceCollector.php';
     require_once APPPATH.'models/MeasuredSources/MeasuredSource.php';
 
@@ -60,7 +61,13 @@ namespace MeasuredSources {
 
         private static function create_store($db, $id, $type)
         {
-            //TODO: 分岐は後で
+            // 南郷洗堰のみは、測定値に時刻の情報がないため
+            // 常にデータ収集時刻を測定時刻と扱っている。
+            // 保存するデータも時刻ごとではなく、変化点のみを保存する
+            if ($type == \Entities\MeasuredSourceTypes::ARAIZEKI) {
+                return new OnlyDifferenceMeasuredSourceStore($db, $id);
+            }
+            
             return new NormalMeasuredSourceStore($db, $id);
         }
     }
