@@ -23,7 +23,13 @@
         <tbody>
 <?php foreach ($list as $measure_value) : ?>
             <tr>
-                <td><?php echo $measure_value['name']; ?></td>
+                <td><a href="<?php 
+                if ($measure_value['link_uri'] === null) {
+                    echo base_url("view/values/{$measure_value['measure_source_id']}");
+                } else {
+                    echo $measure_value['link_uri'];
+                }
+                ?>"><?php echo $measure_value['name']; ?></a></td>
 <?php   foreach ($measure_value['values'] as $measured_at => $value) :?>
                 <td><?php
                 if (0 < $value['difference']): ?><span class="increase"><?php endif;

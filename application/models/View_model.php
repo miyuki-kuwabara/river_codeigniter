@@ -40,13 +40,13 @@ class View_model extends CI_Model
 
         $query = $this->db
             ->select('time_points.measured_at')
-            ->select('values_views.measure_value_id AS measure_value_id')
-            ->select('values.name, values.link_uri')
+            ->select('values_views.measure_value_id')
+            ->select('values.measure_source_id, values.name, values.link_uri')
             ->select('measured_data.value, measured_data.flags')
             ->from('river_views views')
-            ->join("(${time_points}) time_points", "views.keyword = {$this->db->escape($keyword)}", "inner", false)
             ->join('river_measure_values_views values_views', 'views.id = values_views.view_id', 'inner')
             ->join('river_measure_values values', 'values_views.measure_value_id = values.id', 'inner')
+            ->join("(${time_points}) time_points", "views.keyword = {$this->db->escape($keyword)}", "inner", false)
             ->join('river_measured_data measured_data',
                 "values.measure_source_id = measured_data.measure_source_id AND
                 values.value_type = measured_data.value_type AND
@@ -71,6 +71,7 @@ class View_model extends CI_Model
                 $value = array(
                     'name' => $row['name'],
                     'link_uri' => $row['link_uri'],
+                    'measure_source_id' => $row['measure_source_id'],
                     'values' => array()
                 );
 
