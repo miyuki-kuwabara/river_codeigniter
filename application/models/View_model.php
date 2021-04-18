@@ -33,9 +33,9 @@ class View_model extends CI_Model
         $older = $this->db
             ->select('1', false)
             ->from('river_measured_data older')
-            ->where('measured_data.measure_source_id = older.measure_source_id')
-            ->where('measured_data.value_type = older.value_type')
-            ->where('measured_data.measured_at < older.measured_at')
+            ->where('last_data.measure_source_id = older.measure_source_id')
+            ->where('last_data.value_type = older.value_type')
+            ->where('last_data.measured_at < older.measured_at')
             ->where('older.measured_at <= time_points.measured_at')
             ->get_compiled_select();
 
@@ -43,16 +43,22 @@ class View_model extends CI_Model
             ->select('time_points.measured_at')
             ->select('values_views.measure_value_id')
             ->select('values.measure_source_id, values.name, values.link_uri')
-            ->select('measured_data.value, measured_data.flags')
+            ->select("IF(sources.type = {$this->db->escape(\Entities\MeasuredSourceTypes::ARAIZEKI)}, last_data.value, measured_data.value) AS value")
+            ->select("IF(sources.type = {$this->db->escape(\Entities\MeasuredSourceTypes::ARAIZEKI)}, last_data.flags, measured_data.flags) AS flags")
             ->from('river_views views')
             ->join('river_measure_values_views values_views', 'views.id = values_views.view_id', 'inner')
             ->join('river_measure_values values', 'values_views.measure_value_id = values.id', 'inner')
+            ->join('river_measure_sources sources', 'values.measure_source_id = sources.id', 'inner')
             ->join("(${time_points}) time_points", "views.keyword = {$this->db->escape($keyword)}", "inner", false)
             ->join('river_measured_data measured_data',
-                "values.measure_source_id = measured_data.measure_source_id AND
-                values.value_type = measured_data.value_type AND
-                time_points.measured_at >= measured_data.measured_at AND
-                NOT EXISTS($older)", 'left')
+                'values.measure_source_id = measured_data.measure_source_id AND ' .
+                'values.value_type = measured_data.value_type AND ' .
+                'time_points.measured_at = measured_data.measured_at', 'left')
+            ->join('river_measured_data last_data',
+                'values.measure_source_id = last_data.measure_source_id AND ' .
+                'values.value_type = last_data.value_type AND ' .
+                'time_points.measured_at >= last_data.measured_at AND ' .
+                "NOT EXISTS($older)", 'left')
  //           ->where('views.keyword', $keyword)
             ->order_by('values_views.sort_order, time_points.measured_at')
             ->get();
