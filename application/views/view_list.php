@@ -6,6 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>水位集計</title>
     <style type="text/css">
+    h1 {font-size: medium; font-weight: normal;}
+    dl.compact { overflow: hidden; padding: 0; }
+    dl.compact dt { float: left; clear: left; width: 10ex; }
+    dl.compact dd { margin-left: 10ex; padding: 0;  }
+    table {white-space: nowrap;}
+    th {text-align:center; font-weight: normal; padding: 0.2em 1em;}
     td {text-align: right;}
     .increase {color: red;}
     </style>
