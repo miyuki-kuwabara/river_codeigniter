@@ -1,5 +1,9 @@
 <?php 
-$measured_data_last = array_shift($measured_data);
+if ($measure_source_type == \Entities\MeasuredSourceTypes::ARAIZEKI) {
+    $measured_data_last = reset($measured_data);
+} else {
+    $measured_data_last = array_shift($measured_data);
+}
 $latest = end($measured_data);
 reset($measured_data);
 ?>
@@ -15,6 +19,7 @@ reset($measured_data);
     dl.compact { overflow: hidden; padding: 0; }
     dl.compact dt { float: left; clear: left; width: 10ex; }
     dl.compact dd { margin-left: 10ex; padding: 0;  }
+    table {white-space: nowrap;}
     th {text-align:center; font-weight: normal; padding: 0.2em 1em;}
     td {text-align: right;}
     .increase {color: red;}
