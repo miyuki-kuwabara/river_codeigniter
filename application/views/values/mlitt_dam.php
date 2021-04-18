@@ -11,30 +11,42 @@
         </tr>
     </thead>
     <tbody>
-<?php $prev_date = null; ?>
-<?php foreach ($measured_data as $row):
-    $differences = array_reduce(
-        array('inflow', 'outflow', 'percentage', 'amount'),
-        function ($array, $field) use (&$measured_data_last, $row) {
+<?php
+// 先に増減を計算しておく
+$value_types = array('inflow', 'outflow', 'percentage', 'amount');
+$output = array();
+$last = end($measured_data);
+reset($measured_data);
+foreach (array_reverse($measured_data) as $row) {
+    $data = array_reduce(
+        $value_types,
+        function ($array, $field) use (&$last, $row) {
             $value_key = "{$field}_value";
             $flags_key = "{$field}_flags";
-            $difference = 0;
+            $diff_key = "{$field}_diff";
+            $array[$diff_key] = 0;
             if (is_measured_value_enable($row[$value_key], $row[$flags_key])) {
-                if (is_measured_value_enable($measured_data_last[$value_key], $measured_data_last[$flags_key])) {
-                    $difference = $row[$value_key] - $measured_data_last[$value_key];
+                if (is_measured_value_enable($last[$value_key], $last[$flags_key])) {
+                    $difference = $row[$value_key] - $last[$value_key];
                 }
-                $measured_data_last[$value_key] = $row[$value_key];
-                $measured_data_last[$flags_key] = $row[$flags_key];
+                $last[$value_key] = $row[$value_key];
+                $last[$flags_key] = $row[$flags_key];
             }
-            $array[$field] = $difference;
+            $array[$diff_key] = $difference;
             return $array;
-        }, array()); ?>
+        }, $row);
+    array_unshift($output, $data);
+}
+array_pop($output);
+
+$prev_date = null; 
+foreach ($output as $row):?>
         <tr>
             <td><?php if ($prev_date !== $row['measured_date']): eh($row['measured_date']); $prev_date = $row['measured_date']; endif; ?></td>
             <td><?php eh($row['measured_time']); ?></td>
-<?php   foreach ($differences as $field => $difference): ?>
-            <td><?php if (0 < $difference): ?><span class="increase"><?php endif; measured_value($row["{$field}_value"], $row["{$field}_flags"]); if (0 < $difference): ?></span><?php endif; ?></td>
-            <td><?php if ($difference < 0): ?>↓<?php elseif (0 < $difference): ?><span class="increse">↑</span><?php else: ?>→<?php endif; ?></td>
+<?php   foreach ($value_types as $value_type): ?>
+            <td><?php if (0 < $row["{$value_type}_diff"]): ?><span class="increase"><?php endif; measured_value($row["{$value_type}_value"], $row["{$value_type}_flags"]); if (0 < $row["{$value_type}_diff"]): ?></span><?php endif; ?></td>
+            <td><?php if ($row["{$value_type}_diff"] < 0): ?>↓<?php elseif (0 < $row["{$value_type}_diff"]): ?><span class="increse">↑</span><?php else: ?>→<?php endif; ?></td>
 <?php   endforeach; ?>
         </tr>
 <?php endforeach; ?>

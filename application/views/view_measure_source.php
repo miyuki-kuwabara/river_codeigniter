@@ -1,12 +1,3 @@
-<?php 
-if ($measure_source_type == \Entities\MeasuredSourceTypes::ARAIZEKI) {
-    $measured_data_last = reset($measured_data);
-} else {
-    $measured_data_last = array_shift($measured_data);
-}
-$latest = end($measured_data);
-reset($measured_data);
-?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>

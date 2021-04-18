@@ -210,7 +210,7 @@ class View_model extends CI_Model
             ->where('time_points.measure_source_id', $measure_source_id)
             ->where('time_points.measured_at < NOW()')
             ->where("NOT EXISTS(${gt_type})")
-            ->order_by('time_points.measured_at')
+            ->order_by('time_points.measured_at DESC')
             ->get();
 
         return $query->result_array();
