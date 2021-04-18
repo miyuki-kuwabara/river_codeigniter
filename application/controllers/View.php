@@ -17,7 +17,7 @@ class View extends CI_Controller
                 $transition = $keyword;
                 $keyword = 'default';
             } else {
-                $transition = 15;
+                $transition = 4;
             }
         }
         $this->load->model('view_model');
