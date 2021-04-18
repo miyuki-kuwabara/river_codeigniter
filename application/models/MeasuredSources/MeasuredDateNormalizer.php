@@ -9,6 +9,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         private $day = null;
         private $hour = null;
         private $minute = null;
+        private $timezone = null;
 
         public function __construct()
         {
@@ -18,6 +19,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             $this->day = $now['tm_mday'];
             $this->hour = $now['tm_hour'];
             $this->minute = $now['tm_min'];
+            $this->timezone = new \DateTimeZone('Asia/Tokyo');
         }
 
         public function normalize_time($timestr)
@@ -30,7 +32,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 } else {
                     $timestamp = mktime($hour, $minute, 0, $this->month, $this->day, $this->year);
                 }
-                return new \DateTime("@$timestamp");
+                return $this->create_from_timestamp($timestamp);
             }
             return null;
         }
@@ -43,7 +45,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 $day = intval($matches[3]);
 
                 $timestamp = $this->get_normalized_timestamp($year, $month, $day);
-                return new \DateTime("@$timestamp");
+                return $this->create_from_timestamp($timestamp);
             }
             return null;
         }
@@ -58,9 +60,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 $minute = intval($matches[5]);
 
                 $timestamp = $this->get_normalized_timestamp($year, $month, $day, $hour, $minute);
-                return new \DateTime("@$timestamp");
+                return $this->create_from_timestamp($timestamp);
             }
             return null;
+        }
+
+        private function create_from_timestamp($timestamp)
+        {
+            $datetime = new \DateTime("@$timestamp");
+            $datetime->setTimezone($this->timezone);
+            return $datetime;
         }
 
         private function get_normalized_timestamp($year, $month, $day, $hour = 0, $minute = 0)

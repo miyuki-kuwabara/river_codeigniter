@@ -42,11 +42,11 @@ namespace MeasuredSources\Mlitt {
                 'parser' => 'parse_flags',
             ),
             '貯水率' => array(
-                'key' => 'parcentage_of_storage',
+                'key' => 'percentage_of_storage',
                 'parser' => 'parse_numeric',
             ),
             '貯水率属性' => array(
-                'key' => 'parcentage_of_storage_flags',
+                'key' => 'percentage_of_storage_flags',
                 'parser' => 'parse_flags',
             ),
         );
