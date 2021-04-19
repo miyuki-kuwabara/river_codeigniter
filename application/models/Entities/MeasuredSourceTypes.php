@@ -13,5 +13,6 @@ namespace Entities {
         const NARA_LEVEL = 9;                   // 奈良県河川情報システム水位
         const GIFU_LEVEL = 10;                  // 岐阜県川の防災情報水位
         const AICHI_LEVEL = 11;                 // 愛知県 川の防災情報水位
+        const KYOTO_LEVEL = 12;                 // 京都府 河川防災情報
     }
 }
