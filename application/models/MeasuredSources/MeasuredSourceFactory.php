@@ -8,6 +8,7 @@ namespace MeasuredSources {
     require_once APPPATH.'models/MeasuredSources/Nara/NaraCollector.php';
     require_once APPPATH.'models/MeasuredSources/Gifu/GifuCollector.php';
     require_once APPPATH.'models/MeasuredSources/Aichi/AichiCollector.php';
+    require_once APPPATH.'models/MeasuredSources/Kyoto/KyotoCollector.php';
     require_once APPPATH.'models/MeasuredSources/NormalMeasuredSourceStore.php';
     require_once APPPATH.'models/MeasuredSources/OnlyDifferenceMeasuredSourceStore.php';
     require_once APPPATH.'models/MeasuredSources/NullMeasuredSourceCollector.php';
@@ -52,6 +53,8 @@ namespace MeasuredSources {
                 return new Gifu\GifuCollector($uri);
             case \Entities\MeasuredSourceTypes::AICHI_LEVEL:                 // 愛知県 川の防災情報水位
                 return new Aichi\AichiCollector($uri);
+            case \Entities\MeasuredSourceTypes::KYOTO_LEVEL:                 // 京都府 河川防災情報
+                return new Kyoto\KyotoCollector($uri);
             case \Entities\MeasuredSourceTypes::WAKAYAMA_DAM_STORAGE_LEVEL:   // 和歌山県ダム貯水位(予約)
             case \Entities\MeasuredSourceTypes::WAKAYAMA_DAM_STORAGE_VOLUME:  // 和歌山県ダム貯水量(予約)
             default:
