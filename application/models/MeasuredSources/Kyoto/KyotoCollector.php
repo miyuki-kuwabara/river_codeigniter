@@ -12,9 +12,6 @@ namespace MeasuredSources\Kyoto {
 
     class KyotoCollector implements \MeasuredSources\IMeasuredSourceCollector
     {
-        const MARKER_EXTRACT_START = '12時間履歴';
-        const MARKER_EXTRACT_END = '1時間履歴';
-
         private $source_url = null;
         private $entity_space_replacer = null;
         private $measured_date_normalizer = null;
