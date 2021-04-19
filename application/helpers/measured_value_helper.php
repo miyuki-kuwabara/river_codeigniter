@@ -7,7 +7,7 @@ if (!function_exists('is_measured_value_enable')) {
     function is_measured_value_enable($value, $flags)
     {
         return $value !== null &&
-            ($flags == \Entities\MeasuredValueFLags::NONE || $flags != \Entities\MeasuredValueFLags::TEMPORARY);
+            ($flags == \Entities\MeasuredValueFLags::NONE || $flags == \Entities\MeasuredValueFLags::TEMPORARY);
     }
 }
 
