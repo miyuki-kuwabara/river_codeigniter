@@ -61,7 +61,7 @@ namespace MeasuredSources {
             foreach ($datum as $data) {
                 if (array_key_exists($data['value_type'], $latest)) {
                     $latest_data = $latest[$data['value_type']];
-                    if ($latest_data->value == $data['value_type']
+                    if ($latest_data->value == $data['value']
                         && $latest_data->flags == $data['flags']) {
                         continue;
                     }
