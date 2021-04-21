@@ -58,9 +58,10 @@ namespace MeasuredSources\Gifu {
         private function extract($content, $acquired_at)
         {
             $datum = array();
+            $current = $acquired_at;
             foreach (explode("\n", $content) as $line) {
                 if (preg_match('/(\d{1,2}:\d{2})\s+(-?\d+(?:\.\d+)?)/', $line, $matches)) {
-                    $measured_at = $this->measured_date_normalizer->normalize_time($matches[1]);
+                    $measured_at = $this->measured_date_normalizer->normalize_time_backword($matches[1], $current);
                     if ($measured_at === null) {
                         continue;
                     }
@@ -72,6 +73,7 @@ namespace MeasuredSources\Gifu {
                         'flags' => isset($value) ? \Entities\MeasuredValueFlags::NONE : \Entities\MeasuredValueFlags::MISSED,
                         'acquired_at' => $acquired_at,
                     );
+                    $current = $measured_at;
                 }
             }
             return $datum;
