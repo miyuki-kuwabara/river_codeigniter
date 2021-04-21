@@ -50,10 +50,11 @@ namespace MeasuredSources\Kyoto {
             $element = $hrs->item(4);
             $buff = '';
             $datum = array();
+            $current = $date;
             while (null != ($element = $element->nextSibling)) {
                 $buff .= $this->entity_space_replacer->replace($element->textContent);
                 if (preg_match('/\b(\d{1,2}:\d{2})\b\s+(\d+(?:\.\d+)?)m/', $buff, $matches)) {
-                    $measured_at = $this->measured_date_normalizer->normalize_time($matches[1]);
+                    $measured_at = $this->measured_date_normalizer->normalize_time_backword($matches[1], $current);
                     if ($measured_at === null) {
                         continue;
                     }
@@ -69,6 +70,7 @@ namespace MeasuredSources\Kyoto {
                         'acquired_at' => $date,
                     );
                     $buff = '';
+                    $current = $measured_at;
                 }
             }
             return $datum;

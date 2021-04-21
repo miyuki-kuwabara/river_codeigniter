@@ -13,28 +13,37 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
         public function __construct()
         {
-            $now = localtime(time(), true);
-            $this->year = $now['tm_year'] + 1900;
-            $this->month = $now['tm_mon'] + 1;
-            $this->day = $now['tm_mday'];
-            $this->hour = $now['tm_hour'];
-            $this->minute = $now['tm_min'];
-            $this->timezone = new \DateTimeZone('Asia/Tokyo');
+            $now = new \DateTime();
+            list($y, $m, $d, $h, $i, $s) = $this->extruct_datetime($now);
+
+            $this->year = $y;
+            $this->month = $m;
+            $this->day = $d;
+            $this->hour = $h;
+            $this->minute = $i;
+            $this->timezone = $now->getTimezone();
         }
 
         public function normalize_time($timestr)
         {
-            if (preg_match('/\b(\d{1,2}):(\d{2})\b/', $timestr, $matches)) {
-                $hour = intval($matches[1]);
-                $minute = intval($matches[2]);
-                if ($this->hour < $hour || ($this->hour === $hour && $this->minute < $minute)) {
-                    $timestamp = mktime($hour, $minute, 0, $this->month, $this->day - 1, $this->year);
-                } else {
-                    $timestamp = mktime($hour, $minute, 0, $this->month, $this->day, $this->year);
-                }
-                return $this->create_from_timestamp($timestamp);
-            }
-            return null;
+            return $this->normalize_time_internal(
+                $timestr, 
+                $this->year, 
+                $this->month, 
+                $this->day, 
+                $this->hour, 
+                $this->minute);
+        }
+
+        public function normalize_time_backword($timestr, \DateTime $current) {
+            list($y, $m, $d, $h, $i, $s) = $this->extruct_datetime($current);
+            return $this->normalize_time_internal(
+                $timestr,
+                $y,
+                $m,
+                $d,
+                $h,
+                $i);
         }
 
         public function normalize_date($datestr)
@@ -63,6 +72,26 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 return $this->create_from_timestamp($timestamp);
             }
             return null;
+        }
+
+        private function normalize_time_internal($timestr, $y, $m, $d, $h, $i) {
+            if (preg_match('/\b(\d{1,2}):(\d{2})\b/', $timestr, $matches)) {
+                $hour = intval($matches[1]);
+                $minute = intval($matches[2]);
+                if ($h < $hour || ($h === $hour && $i < $minute)) {
+                    $timestamp = mktime($hour, $minute, 0, $m, $d - 1, $y);
+                } else {
+                    $timestamp = mktime($hour, $minute, 0, $m, $d, $y);
+                }
+                return $this->create_from_timestamp($timestamp);
+            }
+            return null;
+        }
+
+        private function extruct_datetime(\DateTime $date_time) {
+            return array_map(
+                function ($s) { return intval($s); },
+                explode('-', $date_time->format('Y-n-j-G-i-s')));
         }
 
         private function create_from_timestamp($timestamp)
