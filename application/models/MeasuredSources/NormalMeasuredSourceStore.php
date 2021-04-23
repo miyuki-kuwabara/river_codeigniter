@@ -13,7 +13,8 @@ namespace MeasuredSources {
         {
             $this->db = $db;
             $this->id = $id;
-            $this->date_from = strtotime('-1 day');
+            list($y, $m, $d, $h) = explode('/', date('Y/m/d/H'));
+            $this->date_from = mktime(intval($h), 0, 0, intval($m), intval($d) - 1, intval($y));
         }
 
         public function store($datum)
