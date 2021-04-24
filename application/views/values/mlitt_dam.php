@@ -1,13 +1,13 @@
 <h1><?php eh($measure_source_name); ?></h1>
 <hr/>
-<table>
+<table class="multi-column-list">
     <thead>
         <tr>
             <td colspan="2"></td>
-            <th colspan="2">流入 <?php if (isset($inflow_unit)): ?>(<?php eh($inflow_unit); ?>)<? endif; ?></th>
-            <th colspan="2">放流 <?php if (isset($outflow_unit)): ?>(<?php eh($outflow_unit); ?>)<? endif; ?></th>
-            <th colspan="2">貯水率 <?php if (isset($percentage_unit)): ?>(<?php eh($percentage_unit); ?>)<? endif; ?></th>
-            <th colspan="2">貯水量 <?php if (isset($amount_unit)): ?>(<?php eh($amount_unit); ?>)<? endif; ?></th>
+            <th colspan="2">流入<?php if (isset($inflow_unit)): ?><br /><?php eh($inflow_unit); ?><? endif; ?></th>
+            <th colspan="2">放流<?php if (isset($outflow_unit)): ?><br /><?php eh($outflow_unit); ?><? endif; ?></th>
+            <th colspan="2">貯水率<?php if (isset($percentage_unit)): ?><br /><?php eh($percentage_unit); ?><? endif; ?></th>
+            <th colspan="2">貯水量<?php if (isset($amount_unit)): ?><br /><?php eh($amount_unit); ?><? endif; ?></th>
         </tr>
     </thead>
     <tbody>

@@ -5,4 +5,5 @@ dl.compact dd { margin-left: 10ex; padding: 0;  }
 table {white-space: nowrap;}
 th {text-align:center; font-weight: normal; padding: 0.2em 1em;}
 td {text-align: right;}
+table.multi-column-list thead th { vertical-align: top; }
 .increase {color: red;}
