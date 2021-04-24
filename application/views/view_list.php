@@ -30,17 +30,21 @@
 <?php foreach ($list as $measure_value) : ?>
             <tr>
                 <td><a href="<?php 
-                if ($measure_value['link_uri'] === null) {
-                    echo base_url("view/values/{$measure_value['measure_source_id']}");
-                } else {
-                    echo $measure_value['link_uri'];
+        if ($measure_value['link_uri'] === null) {
+            echo base_url("view/values/{$measure_value['measure_source_id']}");
+        } else {
+            echo $measure_value['link_uri'];
+        } ?>"><?php eh($measure_value['name']); ?></a></td>
+<?php   $last_value = array_shift($measure_value['values']); 
+        foreach ($measure_value['values'] as $measured_at => $value):
+            $difference = 0;
+            if (is_measured_value_enable($last_value['value'], $last_value['flags'])) {
+                if (is_measured_value_enable($last_value['value'], $last_value['flags'])) {
+                    $difference = $value['value'] - $last_value['value'];
                 }
-                ?>"><?php echo $measure_value['name']; ?></a></td>
-<?php   foreach ($measure_value['values'] as $measured_at => $value) :?>
-                <td><?php
-                if (0 < $value['difference']): ?><span class="increase"><?php endif;
-                     echo is_null($value['value']) ? '--.--' : sprintf('%.2f', $value['value']);
-                if (0 < $value['difference']):?></span><?php endif; ?></td>
+                $last_value = $value;
+            }?>
+                <td<?php if (0 < $difference): ?> class="increase"<?php endif; ?>><?php measured_value($value['value'], $value['flags']); ?></td>
 <?php   endforeach;?>
             </tr>
 <?php endforeach; ?>
