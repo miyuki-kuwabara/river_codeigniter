@@ -1,6 +1,6 @@
 <h1><?php eh($measure_source_name); ?></h1>
 <hr/>
-<table class="multi-column-list">
+<table class="measured-data multi-column-list">
     <thead>
         <tr>
             <td colspan="2"></td>

@@ -1,9 +1,8 @@
 h1 {font-size: medium; font-weight: normal;}
-dl.compact { overflow: hidden; padding: 0; }
-dl.compact dt { float: left; clear: left; width: 10ex; }
-dl.compact dd { margin-left: 10ex; padding: 0;  }
-table {white-space: nowrap;}
-th {text-align:center; font-weight: normal; padding: 0.2em 1em;}
-td {text-align: right;}
+table { white-space: nowrap; }
+table.measure-source-info th, table.measure-source-info td { padding: 0.2em 1em 0.2em 0; }
+table.measure-source-info th { text-align: left; font-weight: normal; }
+table.measured-data th { text-align: center; font-weight: normal; padding: 0.2em 1em; }
+table.measured-data td { text-align: right; }
 table.multi-column-list thead th { vertical-align: top; }
 .increase {color: red;}

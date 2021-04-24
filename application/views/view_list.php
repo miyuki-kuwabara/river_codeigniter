@@ -16,7 +16,7 @@ $decimals = array(
     <link rel="stylesheet" type="text/css" href="<?php eh(base_url('style.css')); ?>" />
 </head>
 <body>
-    <table>
+    <table class="measured-data">
         <thead>
             <tr>
                 <td><?php echo $first_date?></td>
