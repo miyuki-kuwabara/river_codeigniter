@@ -42,7 +42,7 @@ class View_model extends CI_Model
         $query = $this->db
             ->select('time_points.measured_at')
             ->select('values_views.measure_value_id')
-            ->select('values.measure_source_id, values.name, values.link_uri')
+            ->select('values.measure_source_id, values.value_type, values.name, values.link_uri')
             ->select("IF(sources.type = {$this->db->escape(\Entities\MeasuredSourceTypes::ARAIZEKI)}, last_data.value, measured_data.value) AS value")
             ->select("IF(sources.type = {$this->db->escape(\Entities\MeasuredSourceTypes::ARAIZEKI)}, last_data.flags, measured_data.flags) AS flags")
             ->from('river_views views')
@@ -73,6 +73,7 @@ class View_model extends CI_Model
                 }
                 $value_id = $row['measure_value_id'];
                 $value = array(
+                    'value_type' => $row['value_type'],
                     'name' => $row['name'],
                     'link_uri' => $row['link_uri'],
                     'measure_source_id' => $row['measure_source_id'],

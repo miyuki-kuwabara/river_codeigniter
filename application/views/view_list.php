@@ -1,4 +1,12 @@
-<!DOCTYPE html>
+<?php
+$decimals = array(
+    \Entities\MeasuredValueTypes::WATER_LEVEL => 2,
+    \Entities\MeasuredValueTypes::INFLOW => 2,
+    \Entities\MeasuredValueTypes::OUTFLOW => 2,
+    \Entities\MeasuredValueTypes::PERCENTAGE_OF_STORAGE => 1,
+    \Entities\MeasuredValueTypes::AMOUNT_OF_STORAGE => 0,
+);
+?><!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -18,7 +26,8 @@
             </tr>
         </thead>
         <tbody>
-<?php foreach ($list as $measure_value) : ?>
+<?php foreach ($list as $measure_value) :
+        $decimal = $decimals[$measure_value['value_type']]; ?>
             <tr>
                 <td><a href="<?php 
         if ($measure_value['link_uri'] === null) {
@@ -35,7 +44,7 @@
                 }
                 $last_value = $value;
             }?>
-                <td<?php if (0 < $difference): ?> class="increase"<?php endif; ?>><?php measured_value($value['value'], $value['flags']); ?></td>
+                <td<?php if (0 < $difference): ?> class="increase"<?php endif; ?>><?php measured_value($value['value'], $value['flags'], $decimal); ?></td>
 <?php   endforeach;?>
             </tr>
 <?php endforeach; ?>
