@@ -13,7 +13,7 @@ $decimals = array(
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>水位集計</title>
-    <link rel="stylesheet" type="text/css" href="<?php eh(base_url('style.css')); ?>" />
+    <link rel="stylesheet" type="text/css" href="<?php eh(base_url('river.css')); ?>" />
 </head>
 <body>
     <table class="measured-data">
