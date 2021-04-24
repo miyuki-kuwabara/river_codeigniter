@@ -12,16 +12,22 @@ foreach ($measured_data as $row) {
     }
 }
 ?>
-<h1><?php eh($measure_source_name); ?>(<?php eh($value_type_name); ?>)</h1>
+<h1><?php eh($measure_source_name); ?></h1>
 <hr/>
-<dl class="compact">
-    <dt>単位</dt>
-    <dd><?php eh($$unit_varname);?></dd>
-    <dt>最新</dt>
-    <dd><?php measured_value($latest[$value_key], $latest[$flags_key]); ?> <?php eh($$unit_varname); ?> (<?php eh($latest['measured_at'])?>)</dd>
-</dl>
+<table class="measure-source-info">
+	<tbody>
+		<tr>
+			<th>種別</th>
+			<td><?php eh($value_type_name); ?> (<?php eh($$unit_varname);?>)</td>
+		</tr>
+		<tr>
+			<th>最新データ</th>
+			<td><?php measured_value($latest[$value_key], $latest[$flags_key]); ?> <?php eh($$unit_varname); ?> (<?php eh($latest['measured_at'])?>)</td>
+		</tr>
+	</tbody>
+</table>
 <hr/>
-<table>
+<table class="measured-data">
     <tbody>
 <?php
 if (!empty($measured_data)) {
@@ -59,8 +65,8 @@ foreach ($measured_data as $row) :
         <tr>
             <td><?php if ($prev_date !== $current['measured_date']): eh($current['measured_date']); $prev_date = $current['measured_date']; endif; ?></td>
             <td><?php eh($current['measured_time']); ?></td>
-            <td><?php if (0 < $difference): ?><span class="increase"><?php endif; measured_value($current[$value_key], $current[$flags_key]); if (0 < $difference): ?></span><?php endif; ?></td>
-            <td><?php if ($difference < 0): ?>↓<?php elseif (0 < $difference): ?><span class="increse">↑</span><?php else: ?>→<?php endif; ?></td>
+            <td<?php if (0 < $difference): ?> class="increase"<?php endif; ?>><?php measured_value($current[$value_key], $current[$flags_key], $decimal); ?></td>
+            <td<?php if (0 < $difference): ?> class="increase"<?php endif; ?>><?php if ($difference < 0): ?>↓<?php elseif (0 < $difference): ?>↑<?php else: ?>→<?php endif; ?></td>
         </tr>
 <?php   endforeach;
         $output = array();

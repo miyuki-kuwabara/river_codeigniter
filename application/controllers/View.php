@@ -20,6 +20,7 @@ class View extends CI_Controller
                 $transition = 4;
             }
         }
+        $this->load->helper(array('security', 'measured_value'));
         $this->load->model('view_model');
         $this->load->view('view_list', $this->view_model->get_list($keyword, $transition));
     }
