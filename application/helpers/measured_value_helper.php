@@ -15,9 +15,7 @@ if (!function_exists('format_measured_value')) {
     function format_measured_value($value, $flags, $decimal = 2)
     {
         if (is_measured_value_enable($value, $flags)) {
-            return $decimal == 0
-                ? sprintf('%d', $value)
-                : sprintf("%.{$decimal}f", $value);
+            return number_format($value, $decimal);
         }
         return $decimal == 0
             ? '--'
