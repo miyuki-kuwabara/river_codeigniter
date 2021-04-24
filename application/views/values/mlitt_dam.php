@@ -7,7 +7,7 @@
             <th colspan="2">流入<?php if (isset($inflow_unit)): ?><br /><?php eh($inflow_unit); ?><? endif; ?></th>
             <th colspan="2">放流<?php if (isset($outflow_unit)): ?><br /><?php eh($outflow_unit); ?><? endif; ?></th>
             <th colspan="2">貯水率<?php if (isset($percentage_unit)): ?><br /><?php eh($percentage_unit); ?><? endif; ?></th>
-            <th colspan="2">貯水量<?php if (isset($amount_unit)): ?><br /><?php eh($amount_unit); ?><? endif; ?></th>
+            <th colspan="2">貯水量<?php if (isset($amount_unit)): ?><br /><?php eh($amount_unit); else: ?><br />千m3<? endif; ?></th>
         </tr>
     </thead>
     <tbody>
