@@ -38,6 +38,7 @@ if (!empty($measured_data)) {
             array_keys($measured_data[0]),
             function ($a, $key) {
                 $a[$key] = null;
+                return $a;
             }, array('end' => 1));
     } else {
         // それ以外の場合は、最古のデータは次データに増減を表示するための捨てデータとなるため、センチネルのフラグのみ立てる
