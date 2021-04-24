@@ -45,8 +45,8 @@ foreach ($output as $row):?>
             <td><?php if ($prev_date !== $row['measured_date']): eh($row['measured_date']); $prev_date = $row['measured_date']; endif; ?></td>
             <td><?php eh($row['measured_time']); ?></td>
 <?php   foreach ($value_types as $value_type): ?>
-            <td><?php if (0 < $row["{$value_type}_diff"]): ?><span class="increase"><?php endif; measured_value($row["{$value_type}_value"], $row["{$value_type}_flags"]); if (0 < $row["{$value_type}_diff"]): ?></span><?php endif; ?></td>
-            <td><?php if ($row["{$value_type}_diff"] < 0): ?>↓<?php elseif (0 < $row["{$value_type}_diff"]): ?><span class="increse">↑</span><?php else: ?>→<?php endif; ?></td>
+            <td<?php if (0 < $row["{$value_type}_diff"]): ?> class="increase"<?php endif; ?>><?php measured_value($row["{$value_type}_value"], $row["{$value_type}_flags"]); ?></td>
+            <td<?php if (0 < $row["{$value_type}_diff"]): ?> class="increase"<?php endif; ?>><?php if ($row["{$value_type}_diff"] < 0): ?>↓<?php elseif (0 < $row["{$value_type}_diff"]): ?>↑<?php else: ?>→<?php endif; ?></td>
 <?php   endforeach; ?>
         </tr>
 <?php endforeach; ?>

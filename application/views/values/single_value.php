@@ -59,8 +59,8 @@ foreach ($measured_data as $row) :
         <tr>
             <td><?php if ($prev_date !== $current['measured_date']): eh($current['measured_date']); $prev_date = $current['measured_date']; endif; ?></td>
             <td><?php eh($current['measured_time']); ?></td>
-            <td><?php if (0 < $difference): ?><span class="increase"><?php endif; measured_value($current[$value_key], $current[$flags_key]); if (0 < $difference): ?></span><?php endif; ?></td>
-            <td><?php if ($difference < 0): ?>↓<?php elseif (0 < $difference): ?><span class="increse">↑</span><?php else: ?>→<?php endif; ?></td>
+            <td<?php if (0 < $difference): ?> class="increase"<?php endif; ?>><?php measured_value($current[$value_key], $current[$flags_key]); ?></td>
+            <td<?php if (0 < $difference): ?> class="increase"<?php endif; ?>><?php if ($difference < 0): ?>↓<?php elseif (0 < $difference): ?>↑<?php else: ?>→<?php endif; ?></td>
         </tr>
 <?php   endforeach;
         $output = array();
