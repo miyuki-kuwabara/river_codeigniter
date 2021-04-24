@@ -5,16 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php eh($measure_source_name); ?> | 水位集計</title>
-    <style type="text/css">
-    h1 {font-size: medium; font-weight: normal;}
-    dl.compact { overflow: hidden; padding: 0; }
-    dl.compact dt { float: left; clear: left; width: 10ex; }
-    dl.compact dd { margin-left: 10ex; padding: 0;  }
-    table {white-space: nowrap;}
-    th {text-align:center; font-weight: normal; padding: 0.2em 1em;}
-    td {text-align: right;}
-    .increase {color: red;}
-    </style>
+    <link rel="stylesheet" type="text/css" href="<?php eh(base_url('style.css')); ?>" />
 </head>
 <body>
 <?php 
