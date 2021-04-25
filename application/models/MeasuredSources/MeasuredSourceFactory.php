@@ -23,16 +23,17 @@ namespace MeasuredSources {
          * @param integer $id
          * @param integer $type
          * @param string $uri
+         * @param string $extra_string
          * @return \MeasuredSources\MeasuredSource[]
          */
-        public static function create($db, $id, $type, $uri)
+        public static function create($db, $id, $type, $uri, $extra_string)
         {
-            $collector = self::create_collector($type, $uri);
+            $collector = self::create_collector($type, $uri, $extra_string);
             $store = self::create_store($db, $id, $type);
             return new MeasuredSource($collector, $store);
         }
 
-        private static function create_collector($type, $uri)
+        private static function create_collector($type, $uri, $extra_string)
         {
             switch ($type) {
             case \Entities\MeasuredSourceTypes::MLITT_LEVEL:                  // 国土交通省水位

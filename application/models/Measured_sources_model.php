@@ -36,7 +36,7 @@ class Measured_sources_model extends CI_Model
             ->where('value !=', null)
             ->get_compiled_select();
         $query = $this->db
-            ->select('id, type, uri')
+            ->select('id, type, uri, extra_string')
             ->from('river_measure_sources')
             ->or_group_start()
                 ->where('type', \Entities\MeasuredSourceTypes::ARAIZEKI)
@@ -50,7 +50,7 @@ class Measured_sources_model extends CI_Model
         
         $db = $this->db;
         return array_map(function ($row) use (&$db) {
-            return MeasuredSources\MeasuredSourceFactory::create($db, $row->id, $row->type, $row->uri);
+            return MeasuredSources\MeasuredSourceFactory::create($db, $row->id, $row->type, $row->uri, $row->extra_string);
         }, $query->result());
     }
 }
