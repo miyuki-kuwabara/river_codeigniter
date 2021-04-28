@@ -37,6 +37,9 @@ case \Entities\MeasuredSourceTypes::GIFU_LEVEL:                  // 岐阜県川
 case \Entities\MeasuredSourceTypes::AICHI_LEVEL:                 // 愛知県 川の防災情報水位
     include('values/water_level.php');
     break;
+case \Entities\MeasuredSourceTypes::MIE_LEVEL:                   // 防災みえ.jp 水位情報
+    include('values/water_level.php');
+    break;
 case \Entities\MeasuredSourceTypes::WAKAYAMA_DAM_STORAGE_LEVEL:  // 和歌山県ダム貯水位(予約)
 case \Entities\MeasuredSourceTypes::WAKAYAMA_DAM_STORAGE_VOLUME: // 和歌山県ダム貯水量(予約)
 default:
