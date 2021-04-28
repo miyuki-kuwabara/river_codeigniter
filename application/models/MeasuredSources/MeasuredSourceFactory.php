@@ -9,6 +9,7 @@ namespace MeasuredSources {
     require_once APPPATH.'models/MeasuredSources/Gifu/GifuCollector.php';
     require_once APPPATH.'models/MeasuredSources/Aichi/AichiCollector.php';
     require_once APPPATH.'models/MeasuredSources/Kyoto/KyotoCollector.php';
+    require_once APPPATH.'models/MeasuredSources/Mie/MieCollector.php';
     require_once APPPATH.'models/MeasuredSources/NormalMeasuredSourceStore.php';
     require_once APPPATH.'models/MeasuredSources/OnlyDifferenceMeasuredSourceStore.php';
     require_once APPPATH.'models/MeasuredSources/NullMeasuredSourceCollector.php';
@@ -23,16 +24,17 @@ namespace MeasuredSources {
          * @param integer $id
          * @param integer $type
          * @param string $uri
+         * @param string $extra_string
          * @return \MeasuredSources\MeasuredSource[]
          */
-        public static function create($db, $id, $type, $uri)
+        public static function create($db, $id, $type, $uri, $extra_string)
         {
-            $collector = self::create_collector($type, $uri);
+            $collector = self::create_collector($type, $uri, $extra_string);
             $store = self::create_store($db, $id, $type);
             return new MeasuredSource($collector, $store);
         }
 
-        private static function create_collector($type, $uri)
+        private static function create_collector($type, $uri, $extra_string)
         {
             switch ($type) {
             case \Entities\MeasuredSourceTypes::MLITT_LEVEL:                  // 国土交通省水位
@@ -55,6 +57,8 @@ namespace MeasuredSources {
                 return new Aichi\AichiCollector($uri);
             case \Entities\MeasuredSourceTypes::KYOTO_LEVEL:                 // 京都府 河川防災情報
                 return new Kyoto\KyotoCollector($uri);
+            case \Entities\MeasuredSourceTypes::MIE_LEVEL:                   // 防災みえ.jp 水位情報
+                return new Mie\MieCollector($uri, $extra_string);
             case \Entities\MeasuredSourceTypes::WAKAYAMA_DAM_STORAGE_LEVEL:   // 和歌山県ダム貯水位(予約)
             case \Entities\MeasuredSourceTypes::WAKAYAMA_DAM_STORAGE_VOLUME:  // 和歌山県ダム貯水量(予約)
             default:
