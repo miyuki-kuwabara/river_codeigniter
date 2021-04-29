@@ -205,4 +205,30 @@ class View_model extends CI_Model
 
         return $query->result_array();
     }
+
+    public function get_views($except_keywords = null)
+    {
+        $subquery = $this->db
+            ->select('1', false)
+            ->from('river_measure_values_views')
+            ->where('river_views.id = river_measure_values_views.view_id')
+            ->get_compiled_select();
+        $this->db
+            ->select('name, keyword')
+            ->from('river_views')
+            ->where("EXISTS({$subquery})");
+
+        if (is_array($except_keywords)) {
+            if (!empty($except_keywords)) {
+                $this->db->where_not_in('keyword', $except_keywords);
+            }
+        } elseif (isset($except_keywords)) {
+            $this->db->where('keyword !=', $except_keywords);
+        } else ; // 処理なし
+
+        $query = $this->db
+            ->order_by('id')
+            ->get();
+        return $query->result_array();
+    }
 }

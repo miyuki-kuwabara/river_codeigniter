@@ -16,6 +16,10 @@ $queries = http_build_query(array('keyword' => $keyword, 'transition' => $transi
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>水位集計</title>
     <link rel="stylesheet" type="text/css" href="<?php eh(base_url('river.css')); ?>" />
+    <style type="text/css">
+    ul#link-other-views { list-style: none outside; margin: 0.5em; padding-left: 0; }
+    ul#link-other-views li { display: inline-block; margin-right: 0.7em; }
+    </style>
 </head>
 <body>
     <table class="measured-data">
@@ -54,5 +58,10 @@ $queries = http_build_query(array('keyword' => $keyword, 'transition' => $transi
         </tbody>
     </table>
     <hr/>
+    <ul id="link-other-views">
+<?php foreach($views as $view): ?>
+        <li><a href="<?php eh(base_url("{$view['keyword']}/$transition")); ?>"><?php eh($view['name']); ?></a></li>
+<?php endforeach; ?>
+    </ul>
 </body>
 </html>

@@ -22,7 +22,10 @@ class View extends CI_Controller
         }
         $this->load->helper(array('security', 'measured_value'));
         $this->load->model('view_model');
-        $this->load->view('view_list', $this->view_model->get_list($keyword, $transition));
+        $data = $this->view_model->get_list($keyword, $transition);
+        $views = $this->view_model->get_views($keyword);
+        $data['views'] = $views;
+        $this->load->view('view_list', $data);
     }
 
     public function values($source_id)
