@@ -15,5 +15,6 @@ namespace Entities {
         const AICHI_LEVEL = 11;                 // 愛知県 川の防災情報水位
         const KYOTO_LEVEL = 12;                 // 京都府 河川防災情報
         const MIE_LEVEL = 13;                   // 防災みえ.jp 水位情報
+        const IKEDA_LEVEL = 14;                 // 水資源機構 池田総合管理所 情報システム
     }
 }
