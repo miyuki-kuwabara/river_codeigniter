@@ -29,6 +29,7 @@ foreach (array_reverse($measured_data) as $row) {
             $flags_key = "{$field}_flags";
             $diff_key = "{$field}_diff";
             $array[$diff_key] = 0;
+            $difference = 0;
             if (is_measured_value_enable($row[$value_key], $row[$flags_key])) {
                 if (is_measured_value_enable($last[$value_key], $last[$flags_key])) {
                     $difference = $row[$value_key] - $last[$value_key];
