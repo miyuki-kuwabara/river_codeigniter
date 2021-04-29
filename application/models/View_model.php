@@ -93,6 +93,8 @@ class View_model extends CI_Model
         array_shift($timestamps);
         $firstday = $this->week[date('w', $timestamps[0])];
         return array(
+            'keyword' => $keyword,
+            'transition' => $transition,
             'list' => $list,
             'first_date' => date('m/d', $timestamps[0]) . "(${firstday})",
             'times' => array_map(function ($timestamp) {
