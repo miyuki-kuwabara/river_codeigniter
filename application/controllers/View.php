@@ -32,6 +32,16 @@ class View extends CI_Controller
         if (is_numeric($source_id)) {
             $this->load->model('view_model');
             $data = $this->view_model->get_measure_source_data($source_id - 0);
+            $back_url = array_reduce(
+                array(
+                    $this->input->get('keyword'),
+                    $this->input->get('transition'),
+                ), function ($s, $param) {
+                    return isset($param)
+                        ? $s . "/{$param}"
+                        : $s;
+                }, '');
+            $data['back_url'] = $back_url;
             $this->load->view(
                 'view_measure_source',
                 $data);

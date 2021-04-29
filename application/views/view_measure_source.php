@@ -35,5 +35,7 @@ default:
     break;
 }
 ?>
+<hr/>
+<div id="link-back"><a href="<?php echo base_url($back_url); ?>">戻る</a></div>
 </body>
 </html>
