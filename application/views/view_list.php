@@ -6,6 +6,8 @@ $decimals = array(
     \Entities\MeasuredValueTypes::PERCENTAGE_OF_STORAGE => 1,
     \Entities\MeasuredValueTypes::AMOUNT_OF_STORAGE => 0,
 );
+$queries = http_build_query(array('keyword' => $keyword, 'transition' => $transition));
+
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -31,7 +33,8 @@ $decimals = array(
             <tr>
                 <td><a href="<?php 
         if ($measure_value['link_uri'] === null) {
-            echo base_url("view/values/{$measure_value['measure_source_id']}");
+            echo base_url("view/values/{$measure_value['measure_source_id']}?");
+            eh($queries);
         } else {
             echo $measure_value['link_uri'];
         } ?>"><?php eh($measure_value['name']); ?></a></td>
