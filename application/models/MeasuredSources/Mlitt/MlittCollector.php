@@ -4,13 +4,14 @@ namespace MeasuredSources\Mlitt {
 defined('BASEPATH') or exit('No direct script access allowed');
     require_once APPPATH.'models/HttpGetter.php';
     require_once APPPATH.'models/HttpHeaderParser.php';
+    require_once APPPATH.'models/DOM/DOMElementExplorer.php';
     require_once APPPATH.'models/MeasuredSources/IMeasuredSourceCollector.php';
     require_once APPPATH.'models/MeasuredSources/Mlitt/LevelDataParser.php';
     require_once APPPATH.'models/MeasuredSources/Mlitt/DamDataParser.php';
 
     class MlittCollector implements \MeasuredSources\IMeasuredSourceCollector
     {
-        const DOWNLOAD_IMG_SRC = "download.gif";
+        const DOWNLOAD_IMG_SRC = 'download.gif';
         private $source_url = null;
         private $data_parser = null;
         private $timezone = null;
@@ -56,20 +57,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 return null;
             }
 
-            $images = $document->getElementsByTagName("img");
+            $images = $document->getElementsByTagName('img');
             $length = strlen(self::DOWNLOAD_IMG_SRC);
             foreach ($images as $image) {
-                $src = $image->getAttribute("src");
+                $src = $image->getAttribute('src');
                 $split = substr($src, -$length);
                 if (self::DOWNLOAD_IMG_SRC === $split) {
-                    if ($image->parentNode === null || "DOMElement" !== get_class($image->parentNode)) {
+                    $anchor = \DOM\DOMElementExplorer::find_ancestor($image, 'a');
+                    if ($anchor === null) {
                         return null;
                     }
-                    $parent = $image->parentNode;
-                    if ($parent->tagName !== "a") {
-                        return null;
-                    }
-                    $url = $parent->getAttribute("href");
+                    $url = $anchor->getAttribute('href');
                     return $this->normalize_url($this->source_url, $url);
                 }
             }
@@ -79,10 +77,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
         private function normalize_url($base_url, $target_url)
         {
             if (preg_match('/^(\w+\:\/\/[^\/]+)?(\/.+)$/', $target_url, $matches)) {
-                if ($matches[1] !== "") {
+                if ($matches[1] !== '') {
                     return $target_url;
                 }
-                if ($matches[2] !== "") {
+                if ($matches[2] !== '') {
                     if (preg_match('/^(\w+\:\/\/[^\/]+)?(\/.+)$/', $base_url, $matches2)) {
                         return $matches2[1] . $matches[2];
                     }

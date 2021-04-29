@@ -11,7 +11,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     require_once APPPATH.'models/HttpGetter.php';
     require_once APPPATH.'models/HttpHeaderParser.php';
     require_once APPPATH.'models/HttpEntitiySpaceReplacer.php';
-    require_once APPPATH.'models/DOMElementIterator.php';
+    require_once APPPATH.'models/DOM/DOMElementIterator.php';
     require_once APPPATH.'models/MeasuredSources/MeasuredDateNormalizer.php';
     require_once APPPATH.'models/MeasuredSources/IMeasuredSourceCollector.php';
 
@@ -42,14 +42,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
             // 防災みえ.jpの水位情報ページはtable要素が入れ子になっているので
             // getElementsByTagNameでtrを列挙するのはNG。
             // 直接の子ノードを辿って目的の要素を探す必要がある。
-            $tbodies = \DOMElementIterator::CreateWithTagSpec($table->childNodes, 'tbody');
+            $tbodies = \DOM\DOMElementIterator::CreateWithTagSpec($table->childNodes, 'tbody');
             $tbodies->seek(0);
             $tbody = $tbodies->current();
-            foreach (\DOMElementIterator::CreateWithTagSpec($tbody->childNodes, 'tr') as $row) {
+            foreach (\DOM\DOMElementIterator::CreateWithTagSpec($tbody->childNodes, 'tr') as $row) {
                 $index = 0;
 
                 // 4つめのth要素に観測所名が入っている。
-                foreach (\DOMElementIterator::Create($row->childNodes) as $cell) {
+                foreach (\DOM\DOMElementIterator::Create($row->childNodes) as $cell) {
                     if ($cell->tagName != 'th' && $cell->tagName != 'td') {
                         continue;
                     }
@@ -90,9 +90,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
         {
             $current = new \DateTime('-24 hours');
             $datum = array();
-            $tbodies = \DOMElementIterator::CreateWithTagSpec($table->childNodes, 'tbody');
+            $tbodies = \DOM\DOMElementIterator::CreateWithTagSpec($table->childNodes, 'tbody');
             $tbodies->seek(0);
-            foreach (\DOMElementIterator::CreateWithTagSpec($tbodies->current()->childNodes, 'tr') as $row) {
+            foreach (\DOM\DOMElementIterator::CreateWithTagSpec($tbodies->current()->childNodes, 'tr') as $row) {
                 $cells = $row->getElementsByTagName('td');
                 if ($cells->length < 2) {
                     continue;
