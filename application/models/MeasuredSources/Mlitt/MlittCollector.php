@@ -4,6 +4,7 @@ namespace MeasuredSources\Mlitt {
 defined('BASEPATH') or exit('No direct script access allowed');
     require_once APPPATH.'models/HttpGetter.php';
     require_once APPPATH.'models/HttpHeaderParser.php';
+    require_once APPPATH.'models/DOM/DOMElementExplorer.php';
     require_once APPPATH.'models/MeasuredSources/IMeasuredSourceCollector.php';
     require_once APPPATH.'models/MeasuredSources/Mlitt/LevelDataParser.php';
     require_once APPPATH.'models/MeasuredSources/Mlitt/DamDataParser.php';
@@ -62,14 +63,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 $src = $image->getAttribute('src');
                 $split = substr($src, -$length);
                 if (self::DOWNLOAD_IMG_SRC === $split) {
-                    if ($image->parentNode === null || 'DOMElement' !== get_class($image->parentNode)) {
+                    $anchor = \DOM\DOMElementExplorer::find_ancestor($image, 'a');
+                    if ($anchor === null) {
                         return null;
                     }
-                    $parent = $image->parentNode;
-                    if ($parent->tagName !== 'a') {
-                        return null;
-                    }
-                    $url = $parent->getAttribute('href');
+                    $url = $anchor->getAttribute('href');
                     return $this->normalize_url($this->source_url, $url);
                 }
             }
