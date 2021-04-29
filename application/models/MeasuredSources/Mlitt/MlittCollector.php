@@ -56,19 +56,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 return null;
             }
 
-            $encoding = strtoupper($document->encoding);
-            $convert = $encoding === "UTF-8"
-                ? function ($src) {
-                    return $src;
-                }
-            : function ($src) use ($encoding) {
-                return mb_convert_encoding($src, "UTF-8", $encoding);
-            };
-
             $images = $document->getElementsByTagName("img");
             $length = strlen(self::DOWNLOAD_IMG_SRC);
             foreach ($images as $image) {
-                $src = $convert($image->getAttribute("src"));
+                $src = $image->getAttribute("src");
                 $split = substr($src, -$length);
                 if (self::DOWNLOAD_IMG_SRC === $split) {
                     if ($image->parentNode === null || "DOMElement" !== get_class($image->parentNode)) {
@@ -78,7 +69,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     if ($parent->tagName !== "a") {
                         return null;
                     }
-                    $url = $convert($parent->getAttribute("href"));
+                    $url = $parent->getAttribute("href");
                     return $this->normalize_url($this->source_url, $url);
                 }
             }
