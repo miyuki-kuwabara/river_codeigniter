@@ -22,8 +22,8 @@ class Measured_sources_model extends CI_Model
         ->from('river_measured_data')
         ->where('river_measure_sources.id = measure_source_id')
         ->group_start()
-            ->or_where('measured_at <', $latest)
-            ->or_where('MINUTE(NOW()) < 10')
+            ->or_where('measured_at >', $latest)
+            ->or_where('MINUTE(NOW()) < 5')
         ->group_end()
         ->get_compiled_select();
         
