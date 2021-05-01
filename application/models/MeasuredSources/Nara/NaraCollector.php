@@ -55,7 +55,7 @@ namespace MeasuredSources\Nara {
             return array();
         }
 
-        private function extract($table, $acquired_at)
+        private function extract($table, \DateTime $acquired_at)
         {
             $datum = array();
 
@@ -83,13 +83,13 @@ namespace MeasuredSources\Nara {
             return $datum;
         }
 
-        private function extract_measured_at_cell($cell)
+        private function extract_measured_at_cell(\DOMElement $cell)
         {
             $text = $this->entity_space_replacer->replace($cell->textContent);
             return $this->measured_date_normalizer->normalize_datetime($text);
         }
 
-        private function extract_value_cell($cell)
+        private function extract_value_cell(\DOMElement $cell)
         {
             foreach ($cell->childNodes as $node) {
                 $text = trim($this->entity_space_replacer->replace($node->textContent));
