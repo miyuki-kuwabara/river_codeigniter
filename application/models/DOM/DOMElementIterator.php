@@ -9,19 +9,21 @@ namespace DOM {
 
         public static function Create(\DOMNodeList $nodeList)
         {
-            return new DOMElementIterator($nodeList, function (\DOMNode $node) {
-                return $node->nodeType == XML_ELEMENT_NODE;
-            });
+            return new DOMElementIterator(
+                $nodeList,
+                function (\DOMNode $node) {
+                    return $node->nodeType == XML_ELEMENT_NODE;
+                });
         }
 
         public static function CreateWithTagSpec(\DOMNodeList $nodeList, $tagName)
         {
             return new DOMElementIterator(
-            $nodeList,
-            function (\DOMNode $node) use ($tagName) {
-                return $node->nodeType == XML_ELEMENT_NODE &&
-                    $node->tagName == $tagName;
-            });
+                $nodeList,
+                function (\DOMNode $node) use ($tagName) {
+                    return $node->nodeType == XML_ELEMENT_NODE &&
+                        $node->tagName == $tagName;
+                });
         }
 
         private function __construct(\DOMNodeList $nodeList, $predicate)
