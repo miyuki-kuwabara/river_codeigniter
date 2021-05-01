@@ -67,7 +67,7 @@ namespace MeasuredSources\Wakayama {
             return array();
         }
 
-        private function extract($content, $acquired_at)
+        private function extract($content, \DateTime $acquired_at)
         {
             $normalizer = new \MeasuredSources\MeasuredDateNormalizer();
             $datum = array();

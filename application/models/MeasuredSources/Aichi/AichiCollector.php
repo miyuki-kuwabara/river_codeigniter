@@ -59,7 +59,7 @@ namespace MeasuredSources\Aichi {
             return array();
         }
 
-        private function extract($content, $acquired_at)
+        private function extract($content, \DateTime $acquired_at)
         {
             $datum = array();
             $take = false;

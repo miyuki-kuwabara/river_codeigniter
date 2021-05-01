@@ -55,7 +55,7 @@ namespace MeasuredSources\Gifu {
             return array();
         }
 
-        private function extract($content, $acquired_at)
+        private function extract($content, \DateTime $acquired_at)
         {
             $datum = array();
             $current = $acquired_at;
