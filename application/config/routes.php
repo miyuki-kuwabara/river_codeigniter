@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------------
@@ -49,6 +49,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-$route['default_controller'] = 'update';
+
+$route['default_controller'] = 'view';
+$route['update(/.+|)'] = 'update/index$1';
+$route['values(/.+)'] = 'view/values$1';
+$route['view/values/(.*)'] = 'view/values/$1';
+$route['view/index/(:num)'] = 'view/index/default/$1';
+$route['view/index/(.+)'] = 'view/index/$1';
+$route['view/(:num)'] = 'view/index/default/$1';
+$route['view/(.+)'] = 'view/index/$1';
+$route['(:num)'] = 'view/index/default/$1';
+$route['(.*)'] = 'view/index/$1';
 $route['404_override'] = '';
-$route['translate_uri_dashes'] = FALSE;
+$route['translate_uri_dashes'] = false;

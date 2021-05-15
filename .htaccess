@@ -1,9 +1,20 @@
+Options -Indexes
+<Files ~ "^(application|bin|vender|cron.php)\.*$">
+	order deny,allow
+	deny from all
+	allow from localhost   # ローカルからのアクセスを許可
+	allow from 127.0.0.1   # ローカルからのアクセスを許可
+</Files>
+
+SetEnv CI_ENV production
+
 # I recommend you remove `IfModule`. Because if you need mod_rewrite,
 # you don't need `IfModule`. If you don't need it, you don't need this file
 # at all.
 <IfModule mod_rewrite.c>
 RewriteEngine On
+RewriteBase /river/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ public/index.php/$1 [L]
+RewriteRule ^(.*)$ index.php?/$1 [L]
 </IfModule>
