@@ -70,7 +70,7 @@ namespace MeasuredSources\Mlitt {
             foreach ($indexes as $i => $index) {
                 if (isset($index) && isset($columns[$i])) {
                     $column = $columns[$i];
-                    $extracted[$index['key']] = $parser->$index['parser']($column);
+                    $extracted[$index['key']] = call_user_func(array($parser, $index['parser']), $column);
                 }
             }
             
