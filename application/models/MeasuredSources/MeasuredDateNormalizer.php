@@ -46,6 +46,28 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 $i);
         }
 
+        public function normalize_day_time_backword($daytimestr, \DateTime $current)
+        {
+            if (preg_match('/(\d{1,2})日\s*(\d{1,2}):(\d{2})/', $daytimestr, $matches)) {
+                $day = intval($matches[1]);
+                $hour = intval($matches[2]);
+                $minute = intval($matches[3]);
+                list($y, $m, $d, $h, $i, $s) = $this->extruct_datetime($current);
+
+                if ($day > $d || ($day === $d && ($hour > $h || ($hour === $h && $minute > $i)))) {
+                    $m -= 1;
+                    if ($m < 1) {
+                        $m = 12;
+                        $y -= 1;
+                    }
+                }
+
+                $timestamp = mktime($hour, $minute, 0, $m, $day, $y);
+                return $this->create_from_timestamp($timestamp);
+            }
+            return null;
+        }
+
         public function normalize_time_forward($timestr, \DateTime $current) {
             list($y, $m, $d, $h, $i, $s) = $this->extruct_datetime($current);
             if (preg_match('/\b(\d{1,2}):(\d{2})\b/', $timestr, $matches)) {
