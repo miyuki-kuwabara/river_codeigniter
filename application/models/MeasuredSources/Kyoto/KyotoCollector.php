@@ -1,15 +1,16 @@
 <?php
 namespace MeasuredSources\Kyoto {
     defined('BASEPATH') or exit('No direct script access allowed');
-    
     require_once APPPATH.'models/Entities/MeasuredValueFlags.php';
     require_once APPPATH.'models/Entities/MeasuredValueTypes.php';
     require_once APPPATH.'models/HttpGetter.php';
-    require_once APPPATH.'models/HttpHeaderParser.php';
     require_once APPPATH.'models/HttpEntitiySpaceReplacer.php';
     require_once APPPATH.'models/MeasuredSources/MeasuredDateNormalizer.php';
     require_once APPPATH.'models/MeasuredSources/IMeasuredSourceCollector.php';
 
+    // 京都府 河川防災情報のスマートフォン向けページ(例: sp/status/river_log_1_38.html)から
+    // 観測所ごとの24時間表(1時間間隔)を収集する。PC向けページは1ページに複数観測所が
+    // 同居する構成のため採用していない。
     class KyotoCollector implements \MeasuredSources\IMeasuredSourceCollector
     {
         private $source_url = null;
@@ -36,44 +37,70 @@ namespace MeasuredSources\Kyoto {
             $date = new \DateTime();
 
             libxml_use_internal_errors(true);
-            
+
             $document = new \DOMDocument();
             $load = $document->loadHTML($response);
             if ($load === false) {
                 return null;
             }
 
-            $hrs = $document->getElementsByTagName('hr');
-            if ($hrs->length < 5) {
-                return null;
-            }
-            $element = $hrs->item(4);
-            $buff = '';
-            $datum = array();
-            $current = $date;
-            while (null != ($element = $element->nextSibling)) {
-                $buff .= $this->entity_space_replacer->replace($element->textContent);
-                if (preg_match('/\b(\d{1,2}:\d{2})\b\s+(\d+(?:\.\d+)?)m/', $buff, $matches)) {
-                    $measured_at = $this->measured_date_normalizer->normalize_time_backword($matches[1], $current);
-                    if ($measured_at === null) {
-                        continue;
+            $tables = $document->getElementsByTagName('table');
+            foreach ($tables as $table) {
+                $class = $table->getAttribute('class');
+                if (preg_match('/\bdatatable\b/', $class)) {
+                    $result = $this->extract($table, $date);
+                    if (!empty($result)) {
+                        return $result;
                     }
-
-                    $value = is_numeric($matches[2]) ? $matches[2] - 0 : null;
-                    $datum[] = array(
-                        'measured_at' => $measured_at,
-                        'value_type' => \Entities\MeasuredValueTypes::WATER_LEVEL,
-                        'value' => $value,
-                        'flags' => isset($value)
-                            ? \Entities\MeasuredValueFlags::NONE
-                            : \Entities\MeasuredValueFlags::MISSED,
-                        'acquired_at' => $date,
-                    );
-                    $buff = '';
-                    $current = $measured_at;
                 }
             }
+            return array();
+        }
+
+        private function extract($table, \DateTime $acquired_at)
+        {
+            $datum = array();
+
+            $rows = $table->getElementsByTagName('tr');
+            foreach ($rows as $row) {
+                $cells = $row->getElementsByTagName('td');
+                if ($cells->length < 2) {
+                    continue;
+                }
+
+                $measured_at = $this->extract_measured_at_cell($cells->item(0));
+                if (is_null($measured_at)) {
+                    continue;
+                }
+
+                $value = $this->extract_value_cell($cells->item(1));
+                $datum[] = array(
+                    'measured_at' => $measured_at,
+                    'value_type' => \Entities\MeasuredValueTypes::WATER_LEVEL,
+                    'value' => $value,
+                    'flags' => isset($value) ? \Entities\MeasuredValueFlags::NONE : \Entities\MeasuredValueFlags::MISSED,
+                    'acquired_at' => $acquired_at,
+                );
+            }
             return $datum;
+        }
+
+        private function extract_measured_at_cell(\DOMElement $cell)
+        {
+            $text = $this->entity_space_replacer->replace($cell->textContent);
+            return $this->measured_date_normalizer->normalize_datetime($text);
+        }
+
+        private function extract_value_cell(\DOMElement $cell)
+        {
+            foreach ($cell->childNodes as $node) {
+                $text = trim($this->entity_space_replacer->replace($node->textContent));
+                if (!is_numeric($text)) {
+                    continue;
+                }
+                return $text - 0;
+            }
+            return null;
         }
     }
 }
