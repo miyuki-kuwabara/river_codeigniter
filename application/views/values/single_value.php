@@ -31,19 +31,8 @@ foreach ($measured_data as $row) {
     <tbody>
 <?php
 if (!empty($measured_data)) {
-    // センチネルの追加
-    if ($measure_source_type == \Entities\MeasuredSourceTypes::ARAIZEKI) {
-        // 南郷洗堰については最古のデータも表示対象にするため、センチネルを別途追加する
-        $measured_data[] = array_reduce(
-            array_keys($measured_data[0]),
-            function ($a, $key) {
-                $a[$key] = null;
-                return $a;
-            }, array('end' => 1));
-    } else {
-        // それ以外の場合は、最古のデータは次データに増減を表示するための捨てデータとなるため、センチネルのフラグのみ立てる
-        $measured_data[count($measured_data) - 1]['end'] = 1;
-    }
+    // 最古のデータは次データに増減を表示するための捨てデータとなるため、センチネルのフラグのみ立てる
+    $measured_data[count($measured_data) - 1]['end'] = 1;
 }
 
 $prev_date = null;

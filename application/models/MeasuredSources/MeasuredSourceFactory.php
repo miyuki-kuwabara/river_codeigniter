@@ -12,7 +12,6 @@ namespace MeasuredSources {
     require_once APPPATH.'models/MeasuredSources/Mie/MieCollector.php';
     require_once APPPATH.'models/MeasuredSources/Ikeda/IkedaCollector.php';
     require_once APPPATH.'models/MeasuredSources/NormalMeasuredSourceStore.php';
-    require_once APPPATH.'models/MeasuredSources/OnlyDifferenceMeasuredSourceStore.php';
     require_once APPPATH.'models/MeasuredSources/NullMeasuredSourceCollector.php';
     require_once APPPATH.'models/MeasuredSources/MeasuredSource.php';
 
@@ -31,7 +30,7 @@ namespace MeasuredSources {
         public static function create($db, $id, $type, $uri, $extra_string)
         {
             $collector = self::create_collector($type, $uri, $extra_string);
-            $store = self::create_store($db, $id, $type);
+            $store = new NormalMeasuredSourceStore($db, $id);
             return new MeasuredSource($collector, $store);
         }
 
@@ -67,18 +66,6 @@ namespace MeasuredSources {
             default:
                 return new NullMeasuredSourceCollector();
             }
-        }
-
-        private static function create_store($db, $id, $type)
-        {
-            // 南郷洗堰のみは、測定値に時刻の情報がないため
-            // 常にデータ収集時刻を測定時刻と扱っている。
-            // 保存するデータも時刻ごとではなく、変化点のみを保存する
-            if ($type == \Entities\MeasuredSourceTypes::ARAIZEKI) {
-                return new OnlyDifferenceMeasuredSourceStore($db, $id);
-            }
-            
-            return new NormalMeasuredSourceStore($db, $id);
         }
     }
 }
