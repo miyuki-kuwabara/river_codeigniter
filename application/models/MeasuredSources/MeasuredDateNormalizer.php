@@ -73,7 +73,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
             if (preg_match('/\b(\d{1,2}):(\d{2})\b/', $timestr, $matches)) {
                 $hour = intval($matches[1]);
                 $minute = intval($matches[2]);
-                if ($hour < $h || ($hour == $h && $minute < $i)) {
+                // 同じ時のうちでの分の前後は日付跨ぎとみなさない。
+                // (例: 現在時刻9:14を起点に9:00を評価しても、翌日ではなく同日として扱う)
+                if ($hour < $h) {
                     $timestamp = mktime($hour, $minute, 0, $m, $d + 1, $y);
                 } else {
                     $timestamp = mktime($hour, $minute, 0, $m, $d, $y);
