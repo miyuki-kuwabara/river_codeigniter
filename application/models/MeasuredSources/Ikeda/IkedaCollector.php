@@ -1,15 +1,18 @@
 <?php
 namespace MeasuredSources\Ikeda {
     defined('BASEPATH') or exit('No direct script access allowed');
-    
+
     require_once APPPATH.'models/Entities/MeasuredValueFlags.php';
     require_once APPPATH.'models/Entities/MeasuredValueTypes.php';
     require_once APPPATH.'models/HttpGetter.php';
-    require_once APPPATH.'models/HttpHeaderParser.php';
-    require_once APPPATH.'models/HttpEntitiySpaceReplacer.php';
     require_once APPPATH.'models/MeasuredSources/MeasuredDateNormalizer.php';
     require_once APPPATH.'models/MeasuredSources/IMeasuredSourceCollector.php';
 
+    // 水資源機構 吉野川上流総合管理所(旧 池田総合管理所)の水管理情報ページ
+    // (例: dyn/html/p0302/60/p030202.html)から、観測所ごとの24時間表(1時間間隔)を
+    // 収集する。id="area-list-data"のtableに時刻・水位が並ぶ縦持ち形式で、
+    // 日付は日が変わった行にしか入らないため、末尾(最新)の行から現在時刻を
+    // 起点に遡って日付を推定する。
     class IkedaCollector implements \MeasuredSources\IMeasuredSourceCollector
     {
         private $source_url = null;
@@ -31,52 +34,52 @@ namespace MeasuredSources\Ikeda {
         private function get_level_data(\HttpGetter $getter)
         {
             $response = $getter->get($this->source_url);
-            $date = new \DateTime();
-            libxml_use_internal_errors(true);
-            
-            $document = new \DOMDocument();
+            $acquired_at = new \DateTime();
 
-            // おそらくhttp-equivがダブルクォーテーションで括られていないせいで、文字コードをDOMパーサが解析できていない。
-            $content = str_replace(
-                '<META content="text/html; charset=shift_jis" http-equiv=Content-Type>', 
-                '<meta http-equiv="Content-Type" content="text/html; charset=shift_jis">', 
-                $response);
-            $load = $document->loadHTML($content);
+            libxml_use_internal_errors(true);
+
+            $document = new \DOMDocument();
+            $load = $document->loadHTML($response);
             if ($load === false) {
                 return null;
             }
 
-            $divs = $document->getElementsByTagName('div');
-            $last_measured_at = null;
+            $area = $document->getElementById('area-list-data');
+            if ($area === null) {
+                return array();
+            }
+
+            return $this->extract($area, $acquired_at);
+        }
+
+        private function extract($area, \DateTime $acquired_at)
+        {
             $datum = array();
-            foreach ($divs as $div) {
-                $text = $div->textContent;
-                if ($last_measured_at === null) {
-                    if (preg_match('/\d{4}\/\d{2}\/\d{2}(\s+)\d{2}:\d{2}/', $text, $matches)) {
-                        $last_measured_at = \DateTime::createFromFormat("Y/m/d{$matches[1]}G:i", $matches[0], new \DateTimeZone('Asia/Tokyo'));
-                        if ($last_measured_at === false) {
-                            $last_measured_at = null;
-                        }
-                    }
-                } else {
-                    if (preg_match('/(\d{1,2}:\d{2})(?:\s|　)+(-?\d+(?:\.\d+)?)m/', $text, $matches)) {
-                        $measured_at = $this->measured_date_normalizer->normalize_time_backword($matches[1], $last_measured_at);
-                        if ($measured_at === null) {
-                            continue;
-                        }
-                        $value = is_numeric($matches[2]) ? $matches[2] - 0 : null;
-                        $datum[] = array(
-                            'measured_at' => $measured_at,
-                            'value_type' => \Entities\MeasuredValueTypes::WATER_LEVEL,
-                            'value' => $value,
-                            'flags' => isset($value)
-                                ? \Entities\MeasuredValueFlags::NONE
-                                : \Entities\MeasuredValueFlags::MISSED,
-                            'acquired_at' => $date,
-                        );
-                        $last_measured_at = $measured_at;
-                    }
+            $current = $acquired_at;
+
+            $rows = iterator_to_array($area->getElementsByTagName('tr'));
+            foreach (array_reverse($rows) as $row) {
+                $cells = $row->getElementsByTagName('td');
+                if ($cells->length < 3) {
+                    continue;
                 }
+
+                $measured_at = $this->measured_date_normalizer->normalize_time_backword(
+                    $cells->item(1)->textContent, $current);
+                if ($measured_at === null) {
+                    continue;
+                }
+                $current = $measured_at;
+
+                $text = trim($cells->item(2)->textContent);
+                $value = is_numeric($text) ? $text - 0 : null;
+                $datum[] = array(
+                    'measured_at' => $measured_at,
+                    'value_type' => \Entities\MeasuredValueTypes::WATER_LEVEL,
+                    'value' => $value,
+                    'flags' => isset($value) ? \Entities\MeasuredValueFlags::NONE : \Entities\MeasuredValueFlags::MISSED,
+                    'acquired_at' => $acquired_at,
+                );
             }
             return $datum;
         }
