@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS `river_measure_sources`;
 CREATE TABLE `river_measure_sources` (
   `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ソースID',
   `name` VARCHAR(20) NOT NULL COMMENT 'ソース名',
-  `type` TINYINT(4) NOT NULL COMMENT 'ソース種別(1: 国土交通省水位、2: 国土交通省ダム、3: 和歌山県水位、4: 和歌山県ダム流入、5: 和歌山県ダム放流、6: 和歌山県ダム貯水位、7: 和歌山県ダム貯水量、8: 南郷洗堰、9: 奈良県河川情報システム水位、10: 岐阜県川の防災情報水位、11: 愛知県 川の防災情報水位、12: 京都府 河川防災情報、13: 防災みえ.jp 水位情報)',
+  `type` TINYINT(4) NOT NULL COMMENT 'ソース種別(1: 国土交通省水位、2: 国土交通省ダム、3: 和歌山県水位、4: 和歌山県ダム流入(廃止)、5: 和歌山県ダム放流(廃止)、6: 和歌山県ダム貯水位(予約)、7: 和歌山県ダム貯水量(予約)、8: 南郷洗堰、9: 奈良県河川情報システム水位、10: 岐阜県川の防災情報水位、11: 愛知県 川の防災情報水位、12: 京都府 河川防災情報、13: 防災みえ.jp 水位情報、14: 水資源機構 池田総合管理所 情報システム、15: 和歌山県ダム)',
   `uri` VARCHAR(255) NOT NULL COMMENT 'データ取得元URI',
   `extra_string` VARCHAR(24) NULL COMMENT '追加の文字列情報',
   `created_at` DATETIME NOT NULL COMMENT '作成日時',
@@ -22,7 +22,7 @@ CREATE INDEX `idex_river_measure_sources_1`
 CREATE TABLE `river_measure_values` (
   `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT '測定値ID',
   `measure_source_id` INT(11) NOT NULL COMMENT 'ソースID',
-  `value_type` TINYINT(4) NOT NULL COMMENT 'データ種別(1: 水位、2: ダム流入、3: ダム放流、4: 貯水率、5: 貯水位、 6: 貯水量)',
+  `value_type` TINYINT(4) NOT NULL COMMENT 'データ種別(1: 水位、2: ダム流入、3: ダム放流、4: 貯水率、5: 貯水量)',
   `name` VARCHAR(12) NOT NULL COMMENT '測定値名',
   `unit` VARCHAR(8) DEFAULT NULL COMMENT '単位',
   `link_uri` VARCHAR(255) DEFAULT NULL COMMENT '水位集計ページリンク用URL（データ取得元と別に指定する場合）',
@@ -60,7 +60,7 @@ CREATE INDEX `idex_river_measure_values_views_1`
 CREATE TABLE `river_measured_data` (
   `measure_source_id` INT(11) NOT NULL COMMENT '測定値ID',
   `measured_at` DATETIME NOT NULL COMMENT '測定日時',
-  `value_type` TINYINT(4) NOT NULL COMMENT 'データ種別(1: 水位、2: ダム流入、3: ダム放流、4: 貯水率)',
+  `value_type` TINYINT(4) NOT NULL COMMENT 'データ種別(1: 水位、2: ダム流入、3: ダム放流、4: 貯水率、5: 貯水量)',
   `value` decimal(10,3) DEFAULT NULL COMMENT '測定値',
   `flags` TINYINT(4) DEFAULT NULL COMMENT '1:暫定値, 2:欠測, 3:閉局, 4:未登録',
   `acquired_at` DATETIME NOT NULL COMMENT '収集日時',

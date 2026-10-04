@@ -11,14 +11,9 @@ namespace MeasuredSources\Wakayama {
             return new WakayamaLevelCollector($source_url);
         }
 
-        public static function create_dam_inflow($source_url)
+        public static function create_dam($source_url)
         {
-            return WakayamaDamCollector::create_inflow($source_url);
-        }
-
-        public static function create_dam_outflow($source_url)
-        {
-            return WakayamaDamCollector::create_outflow($source_url);
+            return new WakayamaDamCollector($source_url);
         }
     }
 }

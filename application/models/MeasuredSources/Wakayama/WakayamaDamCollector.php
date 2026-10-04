@@ -10,31 +10,24 @@ namespace MeasuredSources\Wakayama {
     // 「ダム詳細画面」(例: damDetail.html?ccd=550) が読み込む
     // 24時間表データ(hyoujidata/dam_detail_{ccd}_tbl24.csv)からダム諸量を収集する。
     // 1行1時刻の縦持ち形式で、流入量・放流量・貯水位・貯水量が同じ行に並ぶ。
+    // 国土交通省ダムと同様に、1ソースで流入量・放流量・貯水量をまとめて収集する。
+    // (貯水位は利用しないため収集しない)
     class WakayamaDamCollector implements \MeasuredSources\IMeasuredSourceCollector
     {
         const COLUMN_KANSOKU_DATE_TIME = 0;
-        const COLUMN_RYUUNYUURYOU = 1; // 流入量
-        const COLUMN_HOURYUURYOU = 2;  // 放流量
+
+        // 列番号 => 測定値種別
+        private $value_columns = array(
+            1 => \Entities\MeasuredValueTypes::INFLOW,             // 流入量
+            2 => \Entities\MeasuredValueTypes::OUTFLOW,            // 放流量
+            4 => \Entities\MeasuredValueTypes::AMOUNT_OF_STORAGE,  // 貯水量
+        );
 
         private $source_url = null;
-        private $value_type = null;
-        private $column = null;
 
-        public static function create_inflow($source_url)
-        {
-            return new WakayamaDamCollector($source_url, \Entities\MeasuredValueTypes::INFLOW, self::COLUMN_RYUUNYUURYOU);
-        }
-
-        public static function create_outflow($source_url)
-        {
-            return new WakayamaDamCollector($source_url, \Entities\MeasuredValueTypes::OUTFLOW, self::COLUMN_HOURYUURYOU);
-        }
-
-        private function __construct($source_url, $value_type, $column)
+        public function __construct($source_url)
         {
             $this->source_url = $source_url;
-            $this->value_type = $value_type;
-            $this->column = $column;
         }
 
         public function get()
@@ -76,7 +69,7 @@ namespace MeasuredSources\Wakayama {
 
             for ($i = count($lines) - 1; $i >= 0; $i--) {
                 $columns = str_getcsv($lines[$i]);
-                if (!isset($columns[self::COLUMN_KANSOKU_DATE_TIME]) || !isset($columns[$this->column])) {
+                if (!isset($columns[self::COLUMN_KANSOKU_DATE_TIME])) {
                     continue;
                 }
 
@@ -86,19 +79,21 @@ namespace MeasuredSources\Wakayama {
                 }
                 $date = $measured_at;
 
-                $value = $this->extract_value($columns[$this->column]);
-                $datum[] = array(
-                    'measured_at' => $measured_at,
-                    'value_type' => $this->value_type,
-                    'value' => $value,
-                    'flags' => isset($value) ? \Entities\MeasuredValueFlags::NONE : \Entities\MeasuredValueFlags::MISSED,
-                    'acquired_at' => $acquired_at,
-                );
+                foreach ($this->value_columns as $column => $value_type) {
+                    $value = isset($columns[$column]) ? $this->extract_value($columns[$column]) : null;
+                    $datum[] = array(
+                        'measured_at' => $measured_at,
+                        'value_type' => $value_type,
+                        'value' => $value,
+                        'flags' => isset($value) ? \Entities\MeasuredValueFlags::NONE : \Entities\MeasuredValueFlags::MISSED,
+                        'acquired_at' => $acquired_at,
+                    );
+                }
             }
             return $datum;
         }
 
-        // 値は"14.8m3/s↓"のように単位・増減記号付きで入っているため、先頭の数値のみ取り出す。
+        // 値は"14.8m3/s↓"や"10582千m3"のように単位・増減記号付きで入っているため、先頭の数値のみ取り出す。
         private function extract_value($text)
         {
             if (preg_match('/^(-?\d+(?:\.\d+)?)/', trim($text), $matches)) {
