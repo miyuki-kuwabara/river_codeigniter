@@ -1,3 +1,13 @@
+<?php
+// 貯水率を提供しないソース(和歌山県ダムなど)では貯水率の列を表示しない
+$has_percentage = false;
+foreach ($measured_data as $row) {
+    if (isset($row['percentage_value']) || isset($row['percentage_flags'])) {
+        $has_percentage = true;
+        break;
+    }
+}
+?>
 <h1><?php eh($measure_source_name); ?></h1>
 <hr/>
 <table class="measured-data multi-column-list">
@@ -6,7 +16,9 @@
             <td colspan="2"></td>
             <th colspan="2">流入<?php if (isset($inflow_unit)): ?><br /><?php eh($inflow_unit); ?><? endif; ?></th>
             <th colspan="2">放流<?php if (isset($outflow_unit)): ?><br /><?php eh($outflow_unit); ?><? endif; ?></th>
+<?php if ($has_percentage): ?>
             <th colspan="2">貯水率<?php if (isset($percentage_unit)): ?><br /><?php eh($percentage_unit); ?><? endif; ?></th>
+<?php endif; ?>
             <th colspan="2">貯水量<?php if (isset($amount_unit)): ?><br /><?php eh($amount_unit); else: ?><br />千m3<? endif; ?></th>
         </tr>
     </thead>
@@ -18,6 +30,9 @@ $value_types = array(
     'outflow' => 2,
     'percentage' => 1,
     'amount' => 0);
+if (!$has_percentage) {
+    unset($value_types['percentage']);
+}
 $output = array();
 $last = end($measured_data);
 reset($measured_data);

@@ -43,10 +43,8 @@ namespace MeasuredSources {
                 return Mlitt\MlittCollector::create_dam($uri);
             case \Entities\MeasuredSourceTypes::WAKAYAMA_LEVEL:               // 和歌山県水位
                 return Wakayama\WakayamaCollector::create_level($uri);
-            case \Entities\MeasuredSourceTypes::WAKAYAMA_DAM_INFLOW:          // 和歌山県ダム流入
-                return Wakayama\WakayamaCollector::create_dam_inflow($uri);
-            case \Entities\MeasuredSourceTypes::WAKAYAMA_DAM_OUTFLOW:         // 和歌山県ダム放流
-                return Wakayama\WakayamaCollector::create_dam_outflow($uri);
+            case \Entities\MeasuredSourceTypes::WAKAYAMA_DAM:                 // 和歌山県ダム
+                return Wakayama\WakayamaCollector::create_dam($uri);
             case \Entities\MeasuredSourceTypes::ARAIZEKI:                     // 南郷洗堰
                 return new Araizeki\AraizekiCollector($uri);
             case \Entities\MeasuredSourceTypes::NARA_LEVEL:                   // 奈良県河川情報システム水位
@@ -61,6 +59,8 @@ namespace MeasuredSources {
                 return new Mie\MieCollector($uri, $extra_string);
             case \Entities\MeasuredSourceTypes::IKEDA_LEVEL:                 // 水資源機構 池田総合管理所 情報システム
                 return new Ikeda\IkedaCollector($uri);
+            case \Entities\MeasuredSourceTypes::WAKAYAMA_DAM_INFLOW:          // 和歌山県ダム流入(廃止)
+            case \Entities\MeasuredSourceTypes::WAKAYAMA_DAM_OUTFLOW:         // 和歌山県ダム放流(廃止)
             case \Entities\MeasuredSourceTypes::WAKAYAMA_DAM_STORAGE_LEVEL:   // 和歌山県ダム貯水位(予約)
             case \Entities\MeasuredSourceTypes::WAKAYAMA_DAM_STORAGE_VOLUME:  // 和歌山県ダム貯水量(予約)
             default:

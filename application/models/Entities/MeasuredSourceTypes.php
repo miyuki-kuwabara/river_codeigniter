@@ -5,8 +5,8 @@ namespace Entities {
         const MLITT_LEVEL = 1;                  // 国土交通省水位
         const MLITT_DAM = 2;                    // 国土交通省ダム
         const WAKAYAMA_LEVEL = 3;               // 和歌山県水位
-        const WAKAYAMA_DAM_INFLOW = 4;          // 和歌山県ダム流入
-        const WAKAYAMA_DAM_OUTFLOW = 5;         // 和歌山県ダム放流
+        const WAKAYAMA_DAM_INFLOW = 4;          // 和歌山県ダム流入(廃止: WAKAYAMA_DAMに統合)
+        const WAKAYAMA_DAM_OUTFLOW = 5;         // 和歌山県ダム放流(廃止: WAKAYAMA_DAMに統合)
         const WAKAYAMA_DAM_STORAGE_LEVEL = 6;   // 和歌山県ダム貯水位(予約)
         const WAKAYAMA_DAM_STORAGE_VOLUME = 7;  // 和歌山県ダム貯水量(予約)
         const ARAIZEKI = 8;                     // 南郷洗堰
@@ -16,5 +16,6 @@ namespace Entities {
         const KYOTO_LEVEL = 12;                 // 京都府 河川防災情報
         const MIE_LEVEL = 13;                   // 防災みえ.jp 水位情報
         const IKEDA_LEVEL = 14;                 // 水資源機構 池田総合管理所 情報システム
+        const WAKAYAMA_DAM = 15;                // 和歌山県ダム
     }
 }

@@ -20,15 +20,14 @@ case \Entities\MeasuredSourceTypes::IKEDA_LEVEL:                 // 水資源機
     include('values/water_level.php');
     break;
 case \Entities\MeasuredSourceTypes::MLITT_DAM:                   // 国土交通省ダム
+case \Entities\MeasuredSourceTypes::WAKAYAMA_DAM:                // 和歌山県ダム
     include('values/mlitt_dam.php');
     break;
-case \Entities\MeasuredSourceTypes::WAKAYAMA_DAM_INFLOW:         // 和歌山県ダム流入
-    include('values/inflow.php');
-    break;
-case \Entities\MeasuredSourceTypes::WAKAYAMA_DAM_OUTFLOW:        // 和歌山県ダム放流
 case \Entities\MeasuredSourceTypes::ARAIZEKI:                    // 南郷洗堰
     include('values/outflow.php');
     break;
+case \Entities\MeasuredSourceTypes::WAKAYAMA_DAM_INFLOW:         // 和歌山県ダム流入(廃止)
+case \Entities\MeasuredSourceTypes::WAKAYAMA_DAM_OUTFLOW:        // 和歌山県ダム放流(廃止)
 case \Entities\MeasuredSourceTypes::WAKAYAMA_DAM_STORAGE_LEVEL:  // 和歌山県ダム貯水位(予約)
 case \Entities\MeasuredSourceTypes::WAKAYAMA_DAM_STORAGE_VOLUME: // 和歌山県ダム貯水量(予約)
 default:
