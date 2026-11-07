@@ -9,7 +9,7 @@
 --
 
 INSERT INTO `river_measure_sources` (`id`, `name`, `type`, `uri`, `extra_string`, `created_at`, `modified_at`) VALUES
-(1, '栄山寺', 9, 'http://www.kasen.pref.nara.jp/sppub/status/river_log_1_131.html', NULL, '2021-04-04 20:49:24', '2021-04-04 20:49:24'),
+(1, '栄山寺', 1, 'https://www.river.go.jp/kawabou/pcfull/tm?itmkndCd=4&ofcCd=7425&obsCd=125&isCurrent=true&fld=0', NULL, '2021-04-04 20:49:24', '2021-04-04 20:49:24'),
 (2, '五條', 1, 'https://www.river.go.jp/kawabou/pcfull/tm?itmkndCd=4&ofcCd=22087&obsCd=13&isCurrent=true&fld=0', NULL, '2021-04-04 21:04:01', '2021-04-04 21:04:01'),
 (3, '椿山ダム', 15, 'https://kasensabo01.pref.wakayama.lg.jp/damDetail.html?ccd=550', NULL, '2021-04-04 21:04:01', '2026-10-04 11:25:43'),
 (5, '金屋', 3, 'https://kasensabo01.pref.wakayama.lg.jp/suiiDetail.html?ccd=406', NULL, '2021-04-04 21:04:01', '2026-09-21 20:06:57'),
