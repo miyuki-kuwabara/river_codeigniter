@@ -5,33 +5,17 @@ require_once APPPATH.'models/Entities/MeasuredValueFlags.php';
 
     class MeasuredValuesParser
     {
-        public static function parse_date($s)
+        // 川の防災情報の品質コード(xxxCcd)。0が正常で、130以上は値なしとして扱われる
+        const CCD_CLOSED = 140;
+        const CCD_MISSED = 190;
+        const CCD_NO_DATA_FROM = 130;
+
+        public static function parse_datetime($s)
         {
-            if (!preg_match('/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/', $s, $matches)) {
+            if (!is_string($s) || !preg_match('/^\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}$/', $s)) {
                 return null;
             }
-            $year = $matches[1] - 0;
-            $month = $matches[2] - 0;
-            $day = $matches[3] - 0;
-
-            if (!checkdate($month, $day, $year)) {
-                return null;
-            }
-            
-            return $s;
-        }
-
-        public static function parse_time($s)
-        {
-            if (!preg_match('/^(\d{2}):(\d{2})$/', $s, $matches)) {
-                return null;
-            }
-            return $s;
-        }
-
-        public static function make_date_from_parsed($date, $time)
-        {
-            return new \DateTime("${date} ${time}");
+            return new \DateTime($s);
         }
 
         public static function parse_numeric($s)
@@ -39,25 +23,18 @@ require_once APPPATH.'models/Entities/MeasuredValueFlags.php';
             return is_numeric($s) ? $s - 0 : null;
         }
 
-        public static function parse_flags($input)
+        public static function parse_flags($ccd)
         {
-            switch (trim($input)) {
-                case '*':
-                    return \Entities\MeasuredValueFlags::TEMPORARY;
-                case '$':
-                    return \Entities\MeasuredValueFlags::MISSED;
-                case '#':
-                    return \Entities\MeasuredValueFlags::CLOSED;
-                case '-':
-                    return \Entities\MeasuredValueFlags::NOT_YET;
-                default:
-                    return \Entities\MeasuredValueFlags::NONE;
+            if ($ccd === self::CCD_CLOSED) {
+                return \Entities\MeasuredValueFlags::CLOSED;
             }
-        }
-
-        public static function parse_empty($s)
-        {
-            return $s;
+            if ($ccd === self::CCD_MISSED) {
+                return \Entities\MeasuredValueFlags::MISSED;
+            }
+            if ($ccd === null || $ccd >= self::CCD_NO_DATA_FROM) {
+                return \Entities\MeasuredValueFlags::NOT_YET;
+            }
+            return \Entities\MeasuredValueFlags::NONE;
         }
     }
 }
